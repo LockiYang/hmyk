@@ -4,9 +4,9 @@ use think\Env;
 
 return [
     'type'            => Env::get('database.type', 'mysql'), // 数据库类型
-    'hostname'        => Env::get('database.hostname', '127.0.0.1'), // 服务器地址
+    'hostname'        => Env::get('database.hostname', 'mysql5'), // 服务器地址
     'database'        => Env::get('database.database', 'hmyk'), // 数据库名
-    'username'        => Env::get('database.username', 'root'), // 用户名
+    'username'        => Env::get('database.username', 'hmyk'), // 用户名
     'password'        => Env::get('database.password', '123456'), // 密码
 	'prefix'          => Env::get('database.prefix', 'hm_'), // 数据库表前缀
     'hostport'        => Env::get('database.hostport', ''), // 端口
