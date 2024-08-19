@@ -73,8 +73,8 @@
                 {:build_heading(null, false)}
                 <ul class="nav nav-tabs">
                     <li class="active"><a href="#tab-1" data-toggle="tab">基础配置</a></li>
+                    <li><a href="#tab-3" data-toggle="tab">登录注册</a></li>
                     <li><a href="#tab-2" data-toggle="tab">购买配置</a></li>
-<!--                    <li><a href="#tab-3" data-toggle="tab">商品详情</a></li>-->
 <!--                    <li><a href="#tab-4" data-toggle="tab">营销设置</a></li>-->
 <!--                    <li><a href="#tab-5" data-toggle="tab">附加选项</a></li>-->
 <!--                    <li><a href="#tab-6" data-toggle="tab">更多信息</a></li>-->
@@ -143,7 +143,19 @@
                             </div>
                         </div>
                     </div>
-                    
+                    <div class="tab-pane fade" id="tab-3">
+                        <div class="widget-body no-padding">
+                            <div class="form-group">
+                                <label class="control-label col-xs-12 col-sm-12">注册功能</label>
+                                <div class="col-xs-12 col-sm-12">
+                                    <div class="checkbox">
+                                        <label><input name="register" type="radio" value="open" {if condition="$options.register == 'open'"}checked{/if}>开启</label>
+                                        <label><input name="register" type="radio" value="close" {if condition="$options.register == 'close'"}checked{/if}>关闭</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="tab-pane fade" id="tab-2">
                         <div class="widget-body no-padding">
                             <div class="form-group">

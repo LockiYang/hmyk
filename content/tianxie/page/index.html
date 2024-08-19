@@ -1,0 +1,103 @@
+{extend name="../content/tianxie/page/layout/default" /}
+{block name="content"}
+
+<div class="container-xl px-5 bg-dark py-md-5">
+    <div class="row gx-5 justify-content-center">
+        <div class="col-lg-6">
+            <div class="text-center my-5">
+                <h2 class="display-6 fw-bolder text-white mb-2">{$template_config.top_title}</h2>
+                <p class="lead text-white-50 mb-4">{$template_config.top_title_des}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{if condition="!empty($template_config.gg_status)"}
+<style>
+    .gonggao p{
+        margin-bottom: 8px;
+    }
+</style>
+<div class="nav-lock">
+    <div class="main">
+        <div class="layui-row">
+            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+                <div class="main-box gonggao" style="padding: 12px 20px;">{$template_config.gonggao}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{/if}
+{php}
+$goods_category = getGoodsCategory();
+$goods = getGoodsAll();
+{/php}
+
+<div class="main">
+    <div class="layui-row">
+        <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+            {volist name="goods_category" id="vo"}
+            <div class="main-box" id="goods" style="margin-top: 10px;">
+                <p class="title-2" style="padding-left: 10px;"><span>{$vo.name}</span></p>
+                <div class="goods">
+                    <div class="goods-list goods-list-1" style="">
+                        {volist name="goods" id="v"}
+                        {if condition="$vo.id == $v.category_id"}
+                        <a href="/goods/{$v.id}.html" data-id="14" data-stock="123" class="goods-box product">
+                            <div class="goodsItem">
+                                <div class="imgBox">
+                                    <img src="{$v.cover}" onerror="javascript:this.src='/assets/img/none.jpg';">
+                                </div>
+                                <div class="goodDesc">
+                                    <div class="goods-name">{$v.name}</div>
+                                    <div class="goods-price">￥{:goodsPrice($v.price, $user, $agency)}</div>
+                                    {if condition="$template_config.sales"}
+                                    <div class="goods-num"><span style="loat: right;">销量 {:$v.invented_sales ? $v.invented_sales : $v.sales}</span></div>
+                                    {/if}
+                                </div>
+                            </div>
+                        </a>
+                        {/if}
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            {/volist}
+        </div>
+    </div>
+
+</div>
+<section class="py-5 border-bottom">
+    <div class="container px-5 my-5 px-5">
+        <div class="text-center mb-5">
+            <h2 class="fw-bolder">{$template_config.bottom_title}</h2>
+            <p class="lead mb-0">{$template_config.bottom_title_des}</p>
+        </div>
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-6">
+                <!-- Testimonial 1-->
+                <div class="card mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i>
+                            </div>
+                            <div class="ms-4">
+                                <p class="mb-1">我们的工作时间：{$template_config.job_time}</p>
+                                <p class="mb-1 mt-2 sm text-muted">{$template_config.job_des}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+{/block}
+
+{block name="footjs"}
+
+{/block}

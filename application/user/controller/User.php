@@ -252,6 +252,11 @@ class User extends Frontend {
             $this->redirect($url ? $url : url('/'));
             die;
         }
+
+        if($this->options['register'] == 'close'){
+            $this->error('注册功能已关闭');
+        }
+
         if ($this->request->isPost()) {
             $username = $this->request->post('username');
             $password = $this->request->post('password');

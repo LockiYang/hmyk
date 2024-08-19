@@ -15,7 +15,7 @@ use think\exception\ValidateException;
 class Goods extends Backend {
 
     protected $relationSearch = true;
-    protected $searchFields = ['out_trade_no', 'goods_name', 'user.username'];
+    protected $searchFields = ['out_trade_no', 'goods_name', 'user.username', 'email', 'mobile', 'password'];
 
     /**
      * Goods模型对象
