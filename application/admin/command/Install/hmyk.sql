@@ -11,7 +11,7 @@
  Target Server Version : 50651 (5.6.51-log)
  File Encoding         : 65001
 
- Date: 27/06/2023 10:03:11
+ Date: 25/01/2024 16:21:28
 */
 
 SET NAMES utf8mb4;
@@ -44,7 +44,7 @@ CREATE TABLE `hm_admin`  (
 -- ----------------------------
 -- Records of hm_admin
 -- ----------------------------
-INSERT INTO `hm_admin` VALUES (1, 'admin', 'Admin', 'bd1a633d31dcfc8eb0f84e87735e48ef', '7cb86c', 'http://hm.test.com/assets/img/avatar.png', 'admin@admin.com', '', 0, 1687830674, '127.0.0.1', 1491635035, 1687830674, 'ec1b5c68-02dc-411f-859c-06fbc49ebae0', 'normal');
+INSERT INTO `hm_admin` VALUES (1, 'admin', 'Admin', '4d1006a6604cec7e4d7e09802ef26c67', '0c8d7a', 'http://hm.test.com/assets/img/avatar.png', 'admin@admin.com', '', 0, 1706165553, '127.0.0.1', 1491635035, 1706165553, '3abaf7bd-6f1d-41bd-89d2-47061c06ef1f', 'normal');
 
 -- ----------------------------
 -- Table structure for hm_admin_log
@@ -693,7 +693,7 @@ CREATE TABLE `hm_options`  (
   `value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL,
   `remarks` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '配置' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '配置' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of hm_options
@@ -701,7 +701,7 @@ CREATE TABLE `hm_options`  (
 INSERT INTO `hm_options` VALUES (1, 'rebeat_1', '10', '一级返佣');
 INSERT INTO `hm_options` VALUES (2, 'rebeat_2', '5', '二级返佣');
 INSERT INTO `hm_options` VALUES (3, 'rebeat_3', '2', '三级返佣');
-INSERT INTO `hm_options` VALUES (4, 'version', '1.1.17', '数据表版本');
+INSERT INTO `hm_options` VALUES (4, 'version', '1.1.18', '数据表版本');
 INSERT INTO `hm_options` VALUES (5, 'name', '我的网站', '网站名称');
 INSERT INTO `hm_options` VALUES (6, 'title', '为中华之崛起而读书', '网站标题');
 INSERT INTO `hm_options` VALUES (7, 'keywords', '基于Thinkphp开发的开源商城系统', '关键词');
@@ -713,6 +713,7 @@ INSERT INTO `hm_options` VALUES (12, 'icon', '/assets/img/favicon.png', 'icon');
 INSERT INTO `hm_options` VALUES (13, 'custom_code', '<script>\r\nconsole.log(\'红盟云卡下载地址：https://blog.ysxue.net/\');\r\n</script>', '自定义代码');
 INSERT INTO `hm_options` VALUES (14, 'buy_input', 'a:1:{i:0;s:5:\"email\";}', '游客下单必填项');
 INSERT INTO `hm_options` VALUES (15, 'corporate_name', '公司名称', '公司名称');
+INSERT INTO `hm_options` VALUES (16, 'register', 'open', '注册功能');
 
 -- ----------------------------
 -- Table structure for hm_order_agency

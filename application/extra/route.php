@@ -41,16 +41,3 @@ Route::rule('/blog', "blog/index/index"); //博客列表
 
 
 Route::rule('/custom/:action', "index/custom/index"); //自定义路由
-
-
-
-
-
-
-
-
-
-
-
-
-

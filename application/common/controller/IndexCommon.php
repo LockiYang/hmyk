@@ -13,6 +13,7 @@ use think\Lang;
 use think\Loader;
 use think\Request;
 use think\Validate;
+use think\Log;
 
 /**
  * 前台控制器基类
@@ -46,9 +47,9 @@ class IndexCommon extends Controller
 
     public $user = null;
 
-	public $timestamp = null;
+    public $timestamp = null;
 
-    public $options = [];
+    public $options = []; // options表配置
 
     public $is_main = false; //是否是主站
 
@@ -58,15 +59,15 @@ class IndexCommon extends Controller
 
     public $plugin = []; // 启用的插件列表信息
 
-    protected $template = null;
+    protected $template = null; // 前台模版
 
-    protected $scan_template = null;
+    protected $scan_template = null; // 扫码页面模版
 
-    protected $template_config = [];
+    protected $template_config = []; // 前台模版的配置
 
-    protected $is_mobile = false;
+    protected $is_mobile = false; // 判断是否手机访问
 
-    protected $agency = [];
+    protected $agency = []; // 代理登记配置表
 
     public function __construct(Request $request = null)
     {
@@ -85,29 +86,24 @@ class IndexCommon extends Controller
         // 检测IP是否允许
         check_ip_allowed();
 
-		$this->timestamp = time();
-
-
-
+        $this->timestamp = time();
 
         $this->auth = Auth::instance();
 
         // token
         $token = $this->request->server('HTTP_TOKEN', $this->request->request('token', \think\Cookie::get('token')));
-
         $path = str_replace('.', '/', $controllername) . '/' . $actionname;
         // 设置当前请求的URI
         $this->auth->setRequestUri($path);
         // 检测是否需要验证登录
-//		print_r($this->noNeedLogin);die;
-
         if (!$this->auth->match($this->noNeedLogin)) {
             //初始化
             $this->auth->init($token);
 
             //检测是否登录
             if (!$this->auth->isLogin()) {
-                $this->redirect(url('/login'));die;
+                $this->redirect(url('/login'));
+                die;
                 $this->error(__('Please login first'), 'index/user/login');
             }
             // 判断是否需要验证权限
@@ -126,15 +122,13 @@ class IndexCommon extends Controller
         $this->user = $this->auth->getUser();
         $this->view->assign('user', $this->user);
         $options = db::name('options')->select();
-        foreach($options as $val){
+        foreach ($options as $val) {
             $this->options[$val['name']] = $val['value'];
         }
         $this->options['buy_input'] = empty($this->options['buy_input']) ? [] : unserialize($this->options['buy_input']);
 
-//        halt($this->options);
-
+        // 分站信息
         $host = Network::getHostDomain(false);
-//        echo $host;die;
         $this->merchant = db::name('merchant')->where(['domain' => $host])->find();
         $this->is_main = $this->merchant ? false : true;
         $this->assign([
@@ -179,10 +173,10 @@ class IndexCommon extends Controller
         $active_plugins = $this->options['active_plugin'];
         $active_plugins = empty($active_plugins) ? [] : unserialize($active_plugins);
         if ($active_plugins && is_array($active_plugins)) {
-            foreach($active_plugins as $plugin) {
+            foreach ($active_plugins as $plugin) {
                 $info = include_once(ROOT_PATH . 'content/' . $plugin . '/info.php');
                 $this->plugin[] = $info;
-                if($info['type'] == 'basic'){
+                if ($info['type'] == 'basic') {
                     include_once(ROOT_PATH . 'content/' . $plugin . '/' . $plugin . '.php');
                 }
             }
@@ -196,30 +190,26 @@ class IndexCommon extends Controller
 
         doAction('init', $initPluginParams);
 
-
-
-
-        foreach($this->plugin as $val){
-            if($val['type'] == 'template'){
+        foreach ($this->plugin as $val) {
+            if ($val['type'] == 'template') {
                 $template[] = $val['english_name'];
-
             }
-            if($val['type'] == 'scan'){
+            if ($val['type'] == 'scan') {
+                // 扫码页面模版
                 $this->scan_template = $val['english_name'];
-
             }
         }
 
-
-        if(empty($template)){
+        // 判断前台模版
+        if (empty($template)) {
             $path = ROOT_PATH . 'application/index/view/error.html';
             $title = "未启用前台模板";
             $content = "当前站点未启用任何前台模板，请管理人员前往【<a href='/admin' target='_blank' style='color: #0992da;'>后台面板</a> - 插件管理 - 我的插件】中选择启用至少一个模板插件。<br><br>如提示404错误信息，<a href='https://blog.ysxue.net/175.html' target='_blank' style='color: #0992da;'>请配置网站伪静态为thinkphp</a>";
-            include_once $path;die;
+            include_once $path;
+            die;
         }
 
         $this->is_mobile = is_mobile();
-
 
         $this->agency = $this->userAgency();
         $this->assign([
@@ -227,40 +217,43 @@ class IndexCommon extends Controller
         ]);
 
 
+        // 检测是否有手机和电脑前台模版
         $tmp = [];
-        if($this->is_mobile){ //手机
-            foreach($template as $val){
+        if ($this->is_mobile) { //手机
+            foreach ($template as $val) {
                 $tconfig = file_exists(ROOT_PATH . 'content/' . $val . '/setting.php') ? include_once ROOT_PATH . 'content/' . $val . '/setting.php' : [];
-                if(empty($tconfig['eq']) || in_array('mobile', $tconfig['eq'])){
+                if (empty($tconfig['eq']) || in_array('mobile', $tconfig['eq'])) {
                     $tmp[] = [
                         'english_name' => $val,
                         'tconfig' => $tconfig
                     ];
                 }
             }
-            if(empty($tmp)){
+            if (empty($tmp)) {
                 $path = ROOT_PATH . 'application/index/view/error.html';
                 $title = "未开启设备为手机的前台模板";
                 $content = "当前站点未启用任何手机端前台模板，请管理人员前往【后台面板 - 插件管理 - 我的插件 - 模板插件配置】中选择开启手机设备。";
-                include_once $path;die;
+                include_once $path;
+                die;
             }
         }
 
-        if(!$this->is_mobile){ //电脑
-            foreach($template as $val){
+        if (!$this->is_mobile) { //电脑
+            foreach ($template as $val) {
                 $tconfig = file_exists(ROOT_PATH . 'content/' . $val . '/setting.php') ? include_once ROOT_PATH . 'content/' . $val . '/setting.php' : [];
-                if(empty($tconfig['eq']) || in_array('pc', $tconfig['eq'])){
+                if (empty($tconfig['eq']) || in_array('pc', $tconfig['eq'])) {
                     $tmp[] = [
                         'english_name' => $val,
                         'tconfig' => $tconfig
                     ];
                 }
             }
-            if(empty($tmp)){
+            if (empty($tmp)) {
                 $path = ROOT_PATH . 'application/index/view/error.html';
                 $title = "未开启设备为电脑的前台模板";
                 $content = "当前站点未启用任何电脑端前台模板，请管理人员前往【后台面板 - 插件管理 - 我的插件 - 模板插件配置】中选择开启电脑设备。";
-                include_once $path;die;
+                include_once $path;
+                die;
             }
         }
 
@@ -271,78 +264,76 @@ class IndexCommon extends Controller
 
         $params = $this->request->param();
 
-        if(file_exists(ROOT_PATH . 'content/' . $this->template . '/module.php')){
+        if (file_exists(ROOT_PATH . 'content/' . $this->template . '/module.php')) {
             include_once ROOT_PATH . 'content/' . $this->template . '/module.php';
         }
 
-
         $this->template = $this->template . '/page/';
 
-
-        if(empty($this->scan_template)){
+        // 检测是否有扫码页面插件
+        if (empty($this->scan_template)) {
             $path = ROOT_PATH . 'application/index/view/error.html';
             $title = "未启用扫码页面插件";
             $content = "当前站点未启用任何扫码页面插件，请管理人员前往【后台面板 - 插件管理 - 我的插件】中选择启用至少一个扫码页面插件。";
-            include_once $path;die;
+            include_once $path;
+            die;
         }
-
-
     }
 
-
-
-
-
-	protected function userAgency(){
-		$agency = Db::name('user_agency')->select();
-		$data = [];
-		foreach($agency as $val){
-			$data[$val['id']] = $val['discount'];
-		}
-		return $data;
-	}
+    protected function userAgency()
+    {
+        $agency = Db::name('user_agency')->select();
+        $data = [];
+        foreach ($agency as $val) {
+            $data[$val['id']] = $val['discount'];
+        }
+        return $data;
+    }
 
     /**
      * 获取商品库库存
      */
-    function getGoodsStock($sku_id){
+    function getGoodsStock($sku_id)
+    {
         return db::name('sku')->where(['id' => $sku_id])->value('stock');
     }
 
-	/**
-	 * 获取商品的购买价格
-	 */
-	function getGoodsMoney($goods, $agency, $options = []){
-		$price = -1;
-		if($goods['is_sku'] == 0){
-//            echo '<pre>'; print_r($goods);die;
-			$price = $this->clPrice(json_decode($goods['sku'][0]['price'], true), $agency);
-		}
-		if($goods['is_sku'] == 1){
-//            print_r($goods['sku']);
-//            print_r($options);die;
-			foreach($goods['sku'] as $val){
+    /**
+     * 获取商品的购买价格
+     */
+    function getGoodsMoney($goods, $agency, $options = [])
+    {
+        $price = -1;
+        if ($goods['is_sku'] == 0) {
+            //            echo '<pre>'; print_r($goods);die;
+            $price = $this->clPrice(json_decode($goods['sku'][0]['price'], true), $agency);
+        }
+        if ($goods['is_sku'] == 1) {
+            //            print_r($goods['sku']);
+            //            print_r($options);die;
+            foreach ($goods['sku'] as $val) {
 
-				if($options['sku_id'] == $val['id']){
-					$price = $this->clPrice($val['price'], $agency);
-					break;
-				}
-			}
-		}
-		return $price;
-	}
+                if ($options['sku_id'] == $val['id']) {
+                    $price = $this->clPrice($val['price'], $agency);
+                    break;
+                }
+            }
+        }
+        return $price;
+    }
 
     /**
      * 获取商品的成本价
      */
-    function getGoodsCost($goods, $options = []){
+    function getGoodsCost($goods, $options = [])
+    {
         $cost = -1;
-        if($goods['is_sku'] == 0){
+        if ($goods['is_sku'] == 0) {
             $cost = json_decode($goods['sku'][0]['price'], true)['cost_price'];
         }
-        if($goods['is_sku'] == 1){
-            foreach($goods['sku'] as $val){
-                if($options['sku_id'] == $val['id']){
+        if ($goods['is_sku'] == 1) {
+            foreach ($goods['sku'] as $val) {
+                if ($options['sku_id'] == $val['id']) {
                     $cost = $val['price']['cost_price'];
                     break;
                 }
@@ -353,85 +344,78 @@ class IndexCommon extends Controller
 
 
 
-	protected function clPrice($val, $agency){
+    protected function clPrice($val, $agency)
+    {
 
-        if(empty($this->user) || $this->user['agency_id'] == 0){
+        if (empty($this->user) || $this->user['agency_id'] == 0) {
             $init_price = empty($val['sale_price']) ? sprintf('%.2f', 0) : $val['sale_price'];
-        }else{
-//            print_r($val);
+        } else {
             $val['sale_price'] = sprintf('%.2f', $val['sale_price']);
-            if(Verify::isEmpty($val['agency_price_' . $this->user['agency_id']])){
-                if(isset($agency[$this->user['agency_id']])){
+            if (Verify::isEmpty($val['agency_price_' . $this->user['agency_id']])) {
+                if (isset($agency[$this->user['agency_id']])) {
                     $init_price = sprintf('%.2f', $val['sale_price'] * ($agency[$this->user['agency_id']] / 10));
-                }else{
+                } else {
                     $init_price = $val['sale_price'];
                 }
-            }else{
+            } else {
                 $init_price = $val['agency_price_' . $this->user['agency_id']];
             }
         }
 
-		return $init_price;
-	}
-	/**
-	 * 完全处理详情
-	 */
-	protected function goodsDetail($goods, $agency){
+        return $init_price;
+    }
+    /**
+     * 完全处理详情
+     */
+    protected function goodsDetail($goods, $agency)
+    {
         $goods['pop_content'] = trim(strip_tags($goods['pop_content']), "\r\n");
-		$goods['attach'] = json_decode($goods['attach'], true);
+        $goods['attach'] = json_decode($goods['attach'], true);
 
-		$goods['wholesale'] = json_decode($goods['wholesale'], true);
-		foreach($goods['wholesale'] as &$val){
-			$val['offer'] = sprintf('%.2f', $val['offer']);
-		}
+        $goods['wholesale'] = json_decode($goods['wholesale'], true);
+        foreach ($goods['wholesale'] as &$val) {
+            $val['offer'] = sprintf('%.2f', $val['offer']);
+        }
         $sku = json_decode($goods['sku'][0]['price'], true);
-		if($goods['is_sku'] == 0){
-			$goods['init_stock'] = $goods['stock'];
-			$goods['crossed_price'] = sprintf('%.2f', $sku['crossed_price']);
-			$goods['init_price'] = $this->clPrice($sku, $agency);
-		}
+        if ($goods['is_sku'] == 0) {
+            $goods['init_stock'] = $goods['stock'];
+            $goods['crossed_price'] = sprintf('%.2f', $sku['crossed_price']);
+            $goods['init_price'] = $this->clPrice($sku, $agency);
+        }
 
-		if($goods['is_sku'] == 1){
-			$active = false;
-			foreach($goods['sku'] as $key => &$val){
+        if ($goods['is_sku'] == 1) {
+            $active = false;
+            foreach ($goods['sku'] as $key => &$val) {
 
                 $val['stock'] = Db::name('sku')->field('id')->where(['goods_id' => $goods['id'], 'id' => $val['id']])->value('stock');
 
                 $val['price'] = json_decode($val['price'], true);
                 $val['price']['crossed_price'] = sprintf('%.2f', $val['price']['crossed_price']);
 
-				$val['init_price'] = $this->clPrice($val['price'], $agency);
-				if($key == 0){
-					$goods['init_stock'] = $val['stock'];
-					$goods['init_price'] = $val['init_price'];
-					$goods['crossed_price'] = sprintf('%.2f', $val['price']['crossed_price']);
-					$goods['jiesheng'] = sprintf('%.2f', $goods['crossed_price'] - $val['init_price']);
-				}
-				if($active == false && $val['stock'] > 0) {
-					$active = true;
-					$val['active'] = true;
-					$goods['init_stock'] = $val['stock'];
-					$goods['init_price'] = $val['init_price'];
-					$goods['crossed_price'] = sprintf('%.2f', $val['price']['crossed_price']);
-					$goods['jiesheng'] = sprintf('%.2f', $goods['crossed_price'] - $val['init_price']);
-				}
-			}
-		}
+                $val['init_price'] = $this->clPrice($val['price'], $agency);
+                if ($key == 0) {
+                    $goods['init_stock'] = $val['stock'];
+                    $goods['init_price'] = $val['init_price'];
+                    $goods['crossed_price'] = sprintf('%.2f', $val['price']['crossed_price']);
+                    $goods['jiesheng'] = sprintf('%.2f', $goods['crossed_price'] - $val['init_price']);
+                }
+                if ($active == false && $val['stock'] > 0) {
+                    $active = true;
+                    $val['active'] = true;
+                    $goods['init_stock'] = $val['stock'];
+                    $goods['init_price'] = $val['init_price'];
+                    $goods['crossed_price'] = sprintf('%.2f', $val['price']['crossed_price']);
+                    $goods['jiesheng'] = sprintf('%.2f', $goods['crossed_price'] - $val['init_price']);
+                }
+            }
+        }
 
-		$goods['sku_name'] = empty($goods['sku_name']) ? '类型' : $goods['sku_name'];
-		$goods['jiesheng'] = empty($goods['crossed_price']) ? false : sprintf('%.2f', $goods['crossed_price'] - $goods['init_price']);
-
-
-		return $goods;
-	}
+        $goods['sku_name'] = empty($goods['sku_name']) ? '类型' : $goods['sku_name'];
+        $goods['jiesheng'] = empty($goods['crossed_price']) ? false : sprintf('%.2f', $goods['crossed_price'] - $goods['init_price']);
 
 
-
-
-
-
-
-
+        return $goods;
+    }
 
     /**
      * 加载语言文件

@@ -157,14 +157,12 @@ class Backend extends Controller
                     $this->redirect('index/login', [], 302, ['referer' => $url]);
                     exit;
                 }
-				if($this->request->isAjax()){
-					$this->error(__('Please login first'), url('index/login', ['url' => $url]));
-				}else{
-					$this->redirect('index/login', [], 302, ['referer' => $url]);
-					exit;
-				}
-
-
+                if ($this->request->isAjax()) {
+                    $this->error(__('Please login first'), url('index/login', ['url' => $url]));
+                } else {
+                    $this->redirect('index/login', [], 302, ['referer' => $url]);
+                    exit;
+                }
             }
             // 判断是否需要验证权限
             if (!$this->auth->match($this->noNeedRight)) {
@@ -256,14 +254,15 @@ class Backend extends Controller
     /**
      * 获取商品的购买价格
      */
-    function getGoodsMoney($goods, $agency, $options = []){
+    function getGoodsMoney($goods, $agency, $options = [])
+    {
         $price = -1;
-        if($goods['is_sku'] == 0){
+        if ($goods['is_sku'] == 0) {
             $price = $this->clPrice($goods['price'], $agency);
         }
-        if($goods['is_sku'] == 1){
-            foreach($goods['sku'] as $val){
-                if($options['sku'] == $val['name']){
+        if ($goods['is_sku'] == 1) {
+            foreach ($goods['sku'] as $val) {
+                if ($options['sku'] == $val['name']) {
                     $price = $this->clPrice($val, $agency);
                     break;
                 }
@@ -274,14 +273,15 @@ class Backend extends Controller
 
 
 
-    protected function clPrice($val, $agency){
-        if(Verify::isEmpty($val['agency_price_' . $this->user['agency_id']])){
-            if(isset($agency[$this->user['agency_id']])){
+    protected function clPrice($val, $agency)
+    {
+        if (Verify::isEmpty($val['agency_price_' . $this->user['agency_id']])) {
+            if (isset($agency[$this->user['agency_id']])) {
                 $init_price = sprintf('%.2f', $val['sale_price'] * ($agency[$this->user['agency_id']] / 10));
-            }else{
+            } else {
                 $init_price = $val['sale_price'];
             }
-        }else{
+        } else {
             $init_price = $val['agency_price_' . $this->user['agency_id']];
         }
         return $init_price;
@@ -289,43 +289,44 @@ class Backend extends Controller
     /**
      * 完全处理详情
      */
-    protected function goodsDetail($goods, $agency = []){
+    protected function goodsDetail($goods, $agency = [])
+    {
 
         $goods['sku'] = json_decode($goods['sku'], true);
         $goods['price'] = json_decode($goods['price'], true);
         $goods['attach'] = json_decode($goods['attach'], true);
 
         $goods['wholesale'] = json_decode($goods['wholesale'], true);
-        foreach($goods['wholesale'] as &$val){
+        foreach ($goods['wholesale'] as &$val) {
             $val['offer'] = sprintf('%.2f', $val['offer']);
         }
 
-//        if($goods['is_sku'] == 0){
-//            $goods['init_stock'] = $goods['stock'];
-//            $goods['crossed_price'] = sprintf('%.2f', $goods['price']['crossed_price']);
-//            $goods['init_price'] = $this->clPrice($goods['price'], $agency);
-//        }
+        //        if($goods['is_sku'] == 0){
+        //            $goods['init_stock'] = $goods['stock'];
+        //            $goods['crossed_price'] = sprintf('%.2f', $goods['price']['crossed_price']);
+        //            $goods['init_price'] = $this->clPrice($goods['price'], $agency);
+        //        }
 
-        if($goods['is_sku'] == 1){
+        if ($goods['is_sku'] == 1) {
             $active = false;
-            foreach($goods['sku'] as $key => &$val){
-                if($goods['type'] == 'alone'){
+            foreach ($goods['sku'] as $key => &$val) {
+                if ($goods['type'] == 'alone') {
                     $val['stock'] = Db::name('stock')->field('id')->where(['goods_id' => $goods['id'], 'sku' => $val['name']])->whereNull('sale_time')->count();
                 }
-                if($goods['type'] == 'fixed'){
+                if ($goods['type'] == 'fixed') {
                     $val['stock'] = db::name('stock')->field('id')->where(['goods_id' => $goods['id'], 'sku' => $val['name']])->value('num');
                 }
-                if($goods['type'] == 'invented'){
+                if ($goods['type'] == 'invented') {
                     $val['stock'] = db::name('stock')->field('id')->where(['goods_id' => $goods['id'], 'sku' => $val['name']])->value('num');
                 }
                 $stock = db::name('stock')->where(['goods_id' => $goods['id'], 'sku' => $val['name']]);
                 $val['stock'] = $stock->whereNull('sale_time')->count();
-//                $val['init_price'] = $this->clPrice($val, $agency);
-                if($key == 0){
+                //                $val['init_price'] = $this->clPrice($val, $agency);
+                if ($key == 0) {
                     $goods['init_stock'] = $val['stock'];
                     $goods['crossed_price'] = sprintf('%.2f', $val['crossed_price']);
                 }
-                if($active == false && $val['stock'] > 0) {
+                if ($active == false && $val['stock'] > 0) {
                     $active = true;
                     $val['active'] = true;
                     $goods['init_stock'] = $val['stock'];
@@ -401,7 +402,7 @@ class Backend extends Controller
             $aliasName = $alias[$name] . '.';
         }
         $sortArr = explode(',', $sort);
-        foreach ($sortArr as $index => & $item) {
+        foreach ($sortArr as $index => &$item) {
             $item = stripos($item, ".") === false ? $aliasName . trim($item) : $item;
         }
         unset($item);
@@ -478,8 +479,8 @@ class Backend extends Controller
                 case 'NOT BETWEEN':
                     $arr = array_slice(explode(',', $v), 0, 2);
                     if (stripos($v, ',') === false || !array_filter($arr, function ($v) {
-                            return $v != '' && $v !== false && $v !== null;
-                        })) {
+                        return $v != '' && $v !== false && $v !== null;
+                    })) {
                         continue 2;
                     }
                     //当出现一边为空时改变操作符

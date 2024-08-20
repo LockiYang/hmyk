@@ -11,7 +11,8 @@ define('API', 'http://banain.ysxue.net/');
 
 
 
-function curlJson($url, $data = null, $json = true, $header = []) {
+function curlJson($url, $data = null, $json = true, $header = [])
+{
 
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_URL, $url);
@@ -54,7 +55,8 @@ function curlJson($url, $data = null, $json = true, $header = []) {
  * @param string $actionFunc
  * @return boolearn
  */
-function addAction($hook, $actionFunc) {
+function addAction($hook, $actionFunc)
+{
     global $hmHooks;
     if (empty($hmHooks[$hook])) {
         $hmHooks[$hook] = [];
@@ -70,11 +72,13 @@ function addAction($hook, $actionFunc) {
  * 执行挂在钩子上的函数,支持多参数 eg:doAction('post_comment', $author, $email, $url, $comment);
  * @param string $hook
  */
-function doAction($hook, &...$args) {
+function doAction($hook, &...$args)
+{
     global $hmHooks;
-//    $args = array_slice(func_get_args(), 1);
+    //    $args = array_slice(func_get_args(), 1);
     if (isset($hmHooks[$hook])) {
-        foreach ($args as &$item) {}
+        foreach ($args as &$item) {
+        }
         foreach ($hmHooks[$hook] as $function) {
             $string = call_user_func_array($function, $args);
         }
@@ -85,14 +89,15 @@ function doAction($hook, &...$args) {
 /**
  * 选择支付插件
  */
-function selectPayPlugin($plugin, $pay_type){
+function selectPayPlugin($plugin, $pay_type)
+{
     $plugin_list = [];
-    foreach($plugin as $val){
-        if($val['type'] == 'pay') {
+    foreach ($plugin as $val) {
+        if ($val['type'] == 'pay') {
             $setting = include_once ROOT_PATH . 'content/' . $val['english_name'] . '/setting.php';
-            if($setting['pay_type']){
-                foreach($setting['pay_type'] as $k => $v){
-                    if($pay_type == $k){
+            if ($setting['pay_type']) {
+                foreach ($setting['pay_type'] as $k => $v) {
+                    if ($pay_type == $k) {
                         $plugin_list[] = [
                             'english_name' => $val['english_name'],
                             'info' => $setting
@@ -109,23 +114,23 @@ function selectPayPlugin($plugin, $pay_type){
 /**
  * 获取支付列表
  */
-function getPayList($plugin){
+function getPayList($plugin)
+{
     $pay_list = [];
-    foreach($plugin as $val){
-        if($val['type'] == 'pay') {
+    foreach ($plugin as $val) {
+        if ($val['type'] == 'pay') {
             $setting = include_once ROOT_PATH . 'content/' . $val['english_name'] . '/setting.php';
-            if(!empty($setting['pay_type'])){
-                foreach($setting['pay_type'] as $key => $val){
+            if (!empty($setting['pay_type'])) {
+                foreach ($setting['pay_type'] as $key => $val) {
                     $pay_list[] = $key;
                 }
             }
-
         }
     }
     $pay_list = array_unique($pay_list);
     //    echo '<pre>'; print_r($pay_list);die;
     $data = [];
-    foreach($pay_list as $val){
+    foreach ($pay_list as $val) {
         $data[] = [
             'value' => $val,
             'name' => payTypeText($val)
@@ -137,7 +142,8 @@ function getPayList($plugin){
 /**
  * 获取客户端设备是否为手机
  */
-function is_mobile() {
+function is_mobile()
+{
     $_SERVER['ALL_HTTP'] = isset($_SERVER['ALL_HTTP']) ? $_SERVER['ALL_HTTP'] : '';
     $mobile_browser = '0';
     if (preg_match('/(up.browser|up.link|mmp|symbian|smartphone|midp|wap|phone|iphone|ipad|ipod|android|xoom)/i', strtolower($_SERVER['HTTP_USER_AGENT']))) $mobile_browser++;
@@ -146,13 +152,99 @@ function is_mobile() {
     if (isset($_SERVER['HTTP_PROFILE'])) $mobile_browser++;
     $mobile_ua = strtolower(substr($_SERVER['HTTP_USER_AGENT'], 0, 4));
     $mobile_agents = [
-        'w3c ', 'acs-', 'alav', 'alca', 'amoi', 'audi', 'avan', 'benq', 'bird', 'blac', 'blaz', 'brew', 'cell', 'cldc', 'cmd-', 'dang', 'doco', 'eric', 'hipt', 'inno', 'ipaq', 'java', 'jigs', 'kddi', 'keji', 'leno', 'lg-c', 'lg-d', 'lg-g', 'lge-', 'maui', 'maxo', 'midp', 'mits', 'mmef', 'mobi', 'mot-', 'moto', 'mwbp', 'nec-', 'newt', 'noki', 'oper', 'palm', 'pana', 'pant', 'phil', 'play', 'port', 'prox', 'qwap', 'sage', 'sams', 'sany', 'sch-', 'sec-', 'send', 'seri', 'sgh-', 'shar', 'sie-', 'siem', 'smal', 'smar', 'sony', 'sph-', 'symb', 't-mo', 'teli', 'tim-', 'tosh', 'tsm-', 'upg1', 'upsi', 'vk-v', 'voda', 'wap-', 'wapa', 'wapi', 'wapp', 'wapr', 'webc', 'winw', 'winw', 'xda', 'xda-'
+        'w3c ',
+        'acs-',
+        'alav',
+        'alca',
+        'amoi',
+        'audi',
+        'avan',
+        'benq',
+        'bird',
+        'blac',
+        'blaz',
+        'brew',
+        'cell',
+        'cldc',
+        'cmd-',
+        'dang',
+        'doco',
+        'eric',
+        'hipt',
+        'inno',
+        'ipaq',
+        'java',
+        'jigs',
+        'kddi',
+        'keji',
+        'leno',
+        'lg-c',
+        'lg-d',
+        'lg-g',
+        'lge-',
+        'maui',
+        'maxo',
+        'midp',
+        'mits',
+        'mmef',
+        'mobi',
+        'mot-',
+        'moto',
+        'mwbp',
+        'nec-',
+        'newt',
+        'noki',
+        'oper',
+        'palm',
+        'pana',
+        'pant',
+        'phil',
+        'play',
+        'port',
+        'prox',
+        'qwap',
+        'sage',
+        'sams',
+        'sany',
+        'sch-',
+        'sec-',
+        'send',
+        'seri',
+        'sgh-',
+        'shar',
+        'sie-',
+        'siem',
+        'smal',
+        'smar',
+        'sony',
+        'sph-',
+        'symb',
+        't-mo',
+        'teli',
+        'tim-',
+        'tosh',
+        'tsm-',
+        'upg1',
+        'upsi',
+        'vk-v',
+        'voda',
+        'wap-',
+        'wapa',
+        'wapi',
+        'wapp',
+        'wapr',
+        'webc',
+        'winw',
+        'winw',
+        'xda',
+        'xda-'
     ];
     if (in_array($mobile_ua, $mobile_agents)) $mobile_browser++;
     if (strpos(strtolower($_SERVER['ALL_HTTP']), 'operamini') !== false) $mobile_browser++;
     if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'windows') !== false) $mobile_browser = 0;
     if (strpos(strtolower($_SERVER['HTTP_USER_AGENT']), 'windows phone') !== false) $mobile_browser++;
-    if ($mobile_browser > 0) return true; else
+    if ($mobile_browser > 0) return true;
+    else
         return false;
 }
 
@@ -160,13 +252,14 @@ function is_mobile() {
 /**
  * 友好显示支付方式
  */
-function payTypeText($payType){
+function payTypeText($payType)
+{
     $pt = null;
-    if($payType == 'alipay') $pt = '支付宝';
-    if($payType == 'wxpay') $pt = '微信支付';
-    if($payType == 'qqpay') $pt = 'QQ支付';
-    if($payType == 'usdt') $pt = 'USDT PAY';
-    if($payType == 'balance') $pt = '余额支付';
+    if ($payType == 'alipay') $pt = '支付宝';
+    if ($payType == 'wxpay') $pt = '微信支付';
+    if ($payType == 'qqpay') $pt = 'QQ支付';
+    if ($payType == 'usdt') $pt = 'USDT PAY';
+    if ($payType == 'balance') $pt = '余额支付';
     return $pt;
 }
 
@@ -175,11 +268,12 @@ function payTypeText($payType){
 /**
  * 判断空值
  */
-function isEmpty($value){
+function isEmpty($value)
+{
     if (empty($value) && !is_numeric($value)) {
         // $var 的值为空值，但不是数字类型
         return true;
-    }else{
+    } else {
         return false;
     }
 }
@@ -187,7 +281,8 @@ function isEmpty($value){
 /**
  * 初始化商品价格
  */
-function initPrice($goods){
+function initPrice($goods)
+{
     $price = json_decode($goods['sku'][0]['price'], true);
     $initPrice = sprintf('%.2f', $price['sale_price']);
     return $initPrice;
@@ -201,7 +296,8 @@ function initPrice($goods){
  * @param int $ipost [是否采用POST形式]
  * @return  string
  */
-function hmCurl($url, $params = false, $ispost = 0, $header = false, $timeout = 0) {
+function hmCurl($url, $params = false, $ispost = 0, $header = false, $timeout = 0)
+{
     $protocol = substr($url, 0, 5);
     $httpInfo = [];
     $ch = curl_init();
