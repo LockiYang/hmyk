@@ -16,18 +16,9 @@ class Index extends IndexCommon
     protected $noNeedRight = ['*'];
     protected $noNeedLogin = ['*'];
 
-
-
-    public function _initialize()
-    {
-
-        parent::_initialize();
-
-        // if (!$this->request->isPjax()) {
-        // }
-    }
-
-
+    /**
+     * 首页
+     */
     public function index()
     {
 
@@ -117,12 +108,10 @@ class Index extends IndexCommon
     }
 
 
-
-
     /**
      * 处理商品列表信息
      */
-    public function indexClGd($goods, $agency)
+    private function indexClGd($goods, $agency)
     {
         if ($goods['is_sku'] == 0) {
             $price = json_decode($goods['sku'][0]['price'], true);

@@ -3,11 +3,10 @@
 namespace app\index\controller;
 
 use app\common\controller\IndexCommon;
-use hehe\Verify;
-use think\Db;
 
 
-class Custom extends IndexCommon {
+class Custom extends IndexCommon
+{
 
     protected $layout = 'default';
 
@@ -16,27 +15,21 @@ class Custom extends IndexCommon {
 
 
 
-    public function _initialize() {
+    public function _initialize()
+    {
 
         parent::_initialize();
 
-        if(!$this->request->isPjax()){
+        if (!$this->request->isPjax()) {
         }
-
     }
 
 
-    public function index() {
+    public function index()
+    {
 
         $action = $this->request->param('action');
 
         return view($this->template . $action);
     }
-
-
-
-
-
-
-
 }
