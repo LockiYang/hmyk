@@ -82,14 +82,14 @@ $(function (w) {
     });
 
     //页面操作
-    $('.pay-type').each(function () {
-        let t = $(this), type = t.data('type'), name = t.data('name')
-        t.append(paySvgArr[type] + ' ' + name);
-    }).click(function () {
-        $('.pay-type').removeClass('pay-select')
-        $(this).toggleClass("pay-select");
-        $('input[name=pay_type]').val($(this).data('id'));
-    });
+    // $('.pay-type').each(function () {
+    //     let t = $(this), type = t.data('type'), name = t.data('name')
+    //     t.append(paySvgArr[type] + ' ' + name);
+    // }).click(function () {
+    //     $('.pay-type').removeClass('pay-select')
+    //     $(this).toggleClass("pay-select");
+    //     $('input[name=pay_type]').val($(this).data('id'));
+    // });
 
 
 

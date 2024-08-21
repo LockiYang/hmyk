@@ -1,44 +1,102 @@
-{extend name="../content/tianxie/page/layout/default" /}
+{extend name="../content/layview/page/layout/default" /}
+
 {block name="head"}
-<link rel="stylesheet" href="__CDN__/template/tianxie/css/goods.css" />
-<style>
-.number-btn{
-    border: 1px solid #ccc;
-    text-align: center;
-    display: inline-block;
-    line-height: 36px;
-    font-size: 18px;
-    color: #666;
-    cursor: pointer;
-}
-.number-btn:hover{
-    background: #efefef;
-}
-.l-msg{
-    color: #111;
-}
-</style>
+    <link rel="stylesheet" href="__CDN__/template/layview/css/goods.css" />
 {/block}
+
 {block name="content"}
 
-<div class="container-xl" id="content">
-
-
-    <div action="/pay.html" method="post" class="layui-row">
-        <div class="bok">
-            <div class="goods-box">
-                <div class="goods-cover">
+    <div class="main">
+        <div class="layui-row">
+            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+                <div class="main-box goods-detail">
+                    <!-- <div class="title" style="border-bottom: 1px solid #f7f7f7;padding-bottom: 5px">
+                        <embed class="svg" src="https://apple.id591.com/content/template/default/svg/spxq.svg" type="image/svg+xml"/>
+                        <span>商品详情</span>
+                    </div> -->
                     <div class="layui-col-md4 layui-col-sm12">
                         <div class="goods-img">
                             <img class="viewer-pictures" src="{$goods.cover}" onerror="javascript:this.src='/assets/img/none.jpg';" alt="">
                         </div>
                     </div>
+                    <form class="layui-form layui-form-pane" action="/post_order.html" method="get">
+                        <input type="hidden" name="goods_id" value="34">
+                        <div class="layui-col-md8 layui-col-sm12">
+                            <div class="goods-msg">
+                                <div class="goods-name">
+                                    <embed class="svg" style="vertical-align: middle;"
+                                        src="https://apple.id591.com/content/template/default/svg/spmc.svg" type="image/svg+xml" />
+                                    <span>
+                                        {$goods.name}
+                                        {if condition="$template_config.stock"}
+                                        <span class="small-tips tips-blue">库存 <span class="init-stock">{$goods.init_stock}</span></span>
+                                        {/if}
+                                        {if condition="$template_config.sales"}
+                                        <span class="small-tips tips-green">销量 {:$goods.invented_sales ? $goods.invented_sales : $goods.sales}</span>
+                                        {/if}
+                                    </span>
+                                </div>
+                                <div class="price">
+                                    <span class="price-sign">￥</span>
+                                    <span class="price-num">{$goods.init_price}</span>
+                                </div>
+
+                                <div class="entry notSelection">
+                                    <div class="input-group order-number-box">
+                                        <div class="input-group-prepend sub">
+                                            <button class="btn btn-decrement btn-outline-secondary" type="button">-</button>
+                                        </div>
+                                        <input type="text" type="text" id="buy-num" name="buy_num" style="text-align: center" class="form-control order-number" required="" lay-verify="required|buy_num" value="1">
+                                        <div class="input-group-append add">
+                                            <button class="btn btn-increment btn-outline-secondary" type="button">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-col-sm6 buy btn">
+                                <button onclick="ordered()"><span>立即下单</span></button>
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
-                <div class="goods-param">
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="layui-row">
+            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+                <div class="main-box goods-detail">
+                    <div class="title" style="border-bottom: 1px solid #f7f7f7;padding-bottom: 5px">
+                        <embed class="svg" src="https://apple.id591.com/content/template/default/svg/spjs.svg" type="image/svg+xml" />
+                        <span>商品描述</span>
+                    </div>
+                    <div class="intro">
+                        {$goods.detail}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    
+<div class="container-xl" id="content">
+    <div action="/pay.html" method="post" class="layui-row">
+        <div class="bok">
+            <div class="goods-box">
+                <!-- <div class="goods-cover">
+                    <div class="layui-col-md4 layui-col-sm12">
+                        <div class="goods-img">
+                            <img class="viewer-pictures" src="{$goods.cover}" onerror="javascript:this.src='/assets/img/none.jpg';" alt="">
+                        </div>
+                    </div>
+                </div> -->
+                <!-- <div class="goods-param">
                     <input type="hidden" name="goods_id" value="16">
                     <div class="layui-col-md8 layui-col-sm12">
                         <div class="goods-msg">
-                            <!--342-->
                             <div class="goods-name">
                                 <span>{$goods.name}</span>
                                 {if condition="$template_config.stock"}
@@ -56,12 +114,12 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
             </div>
             <div class="goods-write">
 
-                <div class="entry notSelection" style="margin-bottom: 10px;">
+                <!-- <div class="entry notSelection" style="margin-bottom: 10px;">
                     <div class="input-group order-number-box">
                         <div class="l-msg" style="line-height: 35px;">购买数量：</div>
                         <div class="input-group-prepend sub number-btn" data-qty-control="minus">-</div>
@@ -71,7 +129,7 @@
 
                         <div class="input-group-append add number-btn" data-qty-control="plus">+</div>
                     </div>
-                </div>
+                </div> -->
                 {if condition="$goods.is_sku == 1"}
                 <div class="entry" style="position: relative;">
 
@@ -170,20 +228,9 @@
             </div>
         </div>
 
-        <div class="main">
-            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
-                <div class="main-box goods-detail">
-                    <div class="title" style="border-bottom: 1px solid #f7f7f7;padding-bottom: 5px">
-                        <span>商品描述</span>
-                    </div>
-                    <div class="intro">{$goods.detail}</div>
-                </div>
-            </div>
-        </div>
 
 
-
-        <div class="footer_buy">
+        <!-- <div class="footer_buy">
             <div class="cons">
                 <a style="display: block;" href="/">
                     <div>
@@ -199,32 +246,29 @@
                 </a>
             </div>
             <button id="buy-btn" data-goods-id="{$goods.id}" class="to_pay" type="submit" style="font-size: 18px;">立即购买</button>
-        </div>
-    </div>
-
-
-
-
-    <div class="bt-mn-box" style="height: 45px;"></div>
-    <div class="bt-mn">
-        <a class="" href="/">
-            <div class="svg iconfont icon-shouye"></div>
-            <span>首页</span>
-        </a>
-
-        <a class="" href="/order.html">
-            <div class="svg iconfont icon-wenzhang1"></div>
-            <span>订单</span>
-        </a>
-        <a class="" target="_blank" href="">
-            <div class="svg iconfont icon-wode1"></div>
-            <span>联系客服</span>
-        </a>
+        </div> -->
     </div>
 
 </div>
+<script>
+    var stock = 24
+    window.onload = function(){
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim', //加上边框
+            title: false,
+            area: [$(window).width() > 480 ? '780px' : '96%', ';max-height:100%'], //宽高
+            content: '<div style="padding: 10px 20px;"><p>临时租用账号只能在<span style="color: rgb(255, 0, 0); font-size: 18px;">苹果商店登录</span>，不可在设置登录以免<span style="font-size: 24px; color: rgb(255, 0, 0);">锁机概不负责</span></p></div>',
+            shadeClose: true,
+            shade: 0.1,
+        });
+    }
+
+</script>
 {/block}
+
 {block name="footjs"}
+
 <script>
     $('.to_pay').click(function(){
         var data = {
@@ -353,64 +397,60 @@
 
 <!-- 弹窗 -->
 <script>
-    (function($) {
-            $.fn.extend({
-                leanModal: function(options) {
-                    var defaults = {
-                        top: 100,
-                        overlay: 0.5,
-                        closeButton: null
-                    };
-                    var overlay = $("<div id='lean_overlay'></div>");
-                    $("body").append(overlay);
-                    options = $.extend(defaults, options);
-                    return this.each(function() {
-                        var o = options;
-                        $(this).click(function(e) {
-                            var modal_id = $(this).attr("href");
-                            $("#lean_overlay").click(function() {
-                                close_modal(modal_id)
-                            });
-                            $(o.closeButton).click(function() {
-                                close_modal(modal_id)
-                            });
-                            var modal_height = $(modal_id).outerHeight();
-                            var modal_width = $(modal_id).outerWidth();
-                            $("#lean_overlay").css({
-                                "display": "block",
-                                opacity: 0
-                            });
-                            $("#lean_overlay").fadeTo(200, o.overlay);
-                            $(modal_id).css({
-                                "display": "block",
-                                "position": "fixed",
-                                "opacity": 0,
-                                "z-index": 11000,
-                                "left": 50 + "%",
-                                "margin-left": -(modal_width / 2) + "px",
-                                "top": o.top + "px"
-                            });
-                            $(modal_id).fadeTo(200, 1);
-                            e.preventDefault()
-                        })
-                    });
-                    function close_modal(modal_id) {
-                        $("#lean_overlay").fadeOut(200);
-                        $(modal_id).css({
-                            "display": "none"
-                        })
-                    }
-                }
-            })
-        }
-    )(jQuery);
-
-
-
+    // (function($) {
+    //         $.fn.extend({
+    //             leanModal: function(options) {
+    //                 var defaults = {
+    //                     top: 100,
+    //                     overlay: 0.5,
+    //                     closeButton: null
+    //                 };
+    //                 var overlay = $("<div id='lean_overlay'></div>");
+    //                 $("body").append(overlay);
+    //                 options = $.extend(defaults, options);
+    //                 return this.each(function() {
+    //                     var o = options;
+    //                     $(this).click(function(e) {
+    //                         var modal_id = $(this).attr("href");
+    //                         $("#lean_overlay").click(function() {
+    //                             close_modal(modal_id)
+    //                         });
+    //                         $(o.closeButton).click(function() {
+    //                             close_modal(modal_id)
+    //                         });
+    //                         var modal_height = $(modal_id).outerHeight();
+    //                         var modal_width = $(modal_id).outerWidth();
+    //                         $("#lean_overlay").css({
+    //                             "display": "block",
+    //                             opacity: 0
+    //                         });
+    //                         $("#lean_overlay").fadeTo(200, o.overlay);
+    //                         $(modal_id).css({
+    //                             "display": "block",
+    //                             "position": "fixed",
+    //                             "opacity": 0,
+    //                             "z-index": 11000,
+    //                             "left": 50 + "%",
+    //                             "margin-left": -(modal_width / 2) + "px",
+    //                             "top": o.top + "px"
+    //                         });
+    //                         $(modal_id).fadeTo(200, 1);
+    //                         e.preventDefault()
+    //                     })
+    //                 });
+    //                 function close_modal(modal_id) {
+    //                     $("#lean_overlay").fadeOut(200);
+    //                     $(modal_id).css({
+    //                         "display": "none"
+    //                     })
+    //                 }
+    //             }
+    //         })
+    //     }
+    // )(jQuery);
 </script>
 
 <style>
-
     #lean_overlay {
         position: fixed;
         z-index: 10000;
@@ -442,7 +482,6 @@
     }
 
     @media screen and (max-width: 700px) {
-
         /* 在这里写CSS样式，当屏幕宽度小于700px时生效 */
         #alert-html{
             background: #fff;
@@ -457,7 +496,6 @@
         }
     }
 
-
     .modal_close{
         text-align: center;
         background: #495057;
@@ -470,11 +508,11 @@
 
 
 </style>
-<div id="alert-html">
-    <div class="content" style="padding: 15px 25px; overflow: auto;">{$goods['pop_content']}</div>
 
+<!-- <div id="alert-html">
+    <div class="content" style="padding: 15px 25px; overflow: auto;">{$goods['pop_content']}</div>
     <div class="modal_close" href="#">关闭</div>
-</div>
+</div> -->
 
 <script>
 

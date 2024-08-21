@@ -1,7 +1,12 @@
 <?php 
 return array (
-  'gateway_url' => '',
-  'appid' => '',
-  'secret_key' => '',
+  'pay_type' => 
+  array (
+    'alipay' => '1',
+    'wxpay' => '1',
+  ),
+  'gateway_url' => 'http://dddd',
+  'appid' => 'dddd',
+  'secret_key' => 'dddd',
 )
 ?>
