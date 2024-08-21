@@ -79,11 +79,6 @@ class Index extends IndexCommon
             'goods_category' => $goods_category,
             'blog' => $blog
         ]);
-        Log::info([
-            'category' => $category,
-            'goods_category' => $goods_category,
-            'blog' => $blog
-        ]);
         return view($this->template . 'index');
     }
 

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>{:$is_main ? $options.title : $merchant.title}</title>
+    <meta name="keywords" content="{$options.keywords}">
+    <meta name="description" content="{$options.description}">
+    <link rel="shortcut icon" href="{$options.icon|default=''}" type="image/png">
+
+    <link rel="stylesheet" href="__CDN__/template/layview/css/layui.css" />
+    <link rel="stylesheet" href="__CDN__/template/layview/css/main.css" />
+    <link rel="stylesheet" href="__CDN__/template/layview/css/header.css">
+    <script src="__CDN__/common/jquery/jquery-1.10.2.min.js"></script>
+
+    {block name="head"}{/block}
+</head>
+
+<body>
+    <!-- 头部 -->
+    <div class="header" id="top">
+        <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+            <div class="logo">
+                <a href="/">
+                    <img src="/uploads/20240819/978150c8d533d9607276f04121cb245f.jpg" alt="" style="max-height: 50px;">
+                </a>
+                {$options.name}
+            </div>
+            <i class="layui-icon layui-icon-shrink-right mobile-icon"></i>
+            <div class="nav">
+                <ul class="layui-nav">
+                    <li class="layui-nav-item layui-this"><a href="/">首页</a></li>
+                    <li class="layui-nav-item "><a href="{:url('/find_order')}">查看订单</a></li>
+                    <li class="layui-nav-item "><a href="{:url('/blog')}">帮助中心</a></li>
+                    <!-- <li class="layui-nav-item"><a href="/complain.html">投诉订单</a></li> -->
+                    {if condition="$user"}
+                    <li class="layui-nav-item"><a href="{:url('/user')}">个人中心</a></li>
+                    <li class="layui-nav-item"><a href="{:url('/logout')}">退出登录</a></li>
+                    {else /}
+                    <li class="layui-nav-item"><a href="{:url('/login')}">登录</a></li>
+                    <li class="layui-nav-item"><a href="{:url('/register')}">注册</a></li>
+                    {/if}
+                    <span class="layui-nav-bar"></span>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="content">
+        
+
+        {block name="content"}{/block}
+
+        <!-- Footer部分 -->
+        <div class="laypro_footer">
+            <img src="__CDN__/template/tianxie/img/aq.png" width="80">
+            <span>{$options.corporate_name}</span><span>@版权所有</span>
+            <a href="{:url('/custom/user_ment')}">用户协议</a> | <a href="{:url('/custom/private_ment')}">隐私政策</a>
+            <!--流量统计代码-->
+            <span id="statistics"></span>
+        </div>
+    </div>
+
+    
+
+
+<script src="__CDN__/template/layview/js/layui.js"></script>
+<script src="__CDN__/template/layview/js/main.js"></script>
+<script src="__CDN__/template/layview/js/jquery.qrcode.min.js"></script>
+<script src="__CDN__/template/layview/js/uaredirect.js"></script>
+<script>
+    $(".mobile-icon").click(function () {
+        $(".nav").toggleClass('layui-show');
+    });
+</script>
+
+{$options.custom_code|default=''}
+
+{block name="footjs"}{/block}
+{:doAction('footjs')}
+
+</body>
+</html>

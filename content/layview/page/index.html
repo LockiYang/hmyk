@@ -1,0 +1,202 @@
+{extend name="../content/layview/page/layout/default" /}
+{block name="content"}
+
+    <!-- <div class="container-xl px-5 bg-dark py-md-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-lg-6">
+                <div class="text-center my-5">
+                    <h2 class="display-6 fw-bolder text-white mb-2">{$template_config.top_title}</h2>
+                    <p class="lead text-white-50 mb-4">{$template_config.top_title_des}</p>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- 公告 -->
+    <div class="main">
+        <div class="layui-row">
+            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+                <div class="main-box" id="notice" style="padding: 10px 20px;">
+                    <p style="text-align: center; line-height: 1; margin-top: 10px; margin-bottom: 15px;"><span style="font-size: 18px;"><span style="font-size: 18px;">&nbsp;</span><span style="font-size: 18px;"> &nbsp;</span><span style="color: rgb(255, 0, 0); font-size: 18px;">24小时在线服务&nbsp;&nbsp;</span><span style="font-size: 18px;">右下角联系</span><span style="color: rgb(255, 0, 0); font-size: 18px;">客服&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span></span></p>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {php}
+    $goods_category = getGoodsCategory();
+    $goods = getGoodsAll();
+    {/php}
+
+    <!-- 分类 -->
+    <div class="main">
+        <div class="layui-row">
+            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+                <div class="main-box" id="category">
+                    <div class="title">
+                        <svg t="1602925747464" class="icon" viewBox="0 0 1024 1024"
+                            version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1270"
+                            data-spm-anchor-id="a313x.7781069.0.i4" width="20" height="20">
+                            <path
+                                d="M619.52 578.56V808.96h194.56V660.48h-133.12v-81.92h215.04V849.92l-40.96 40.96h-276.48l-40.96-40.96V578.56z"
+                                fill="#00EAFF" p-id="1271" data-spm-anchor-id="a313x.7781069.0.i0" class=""></path>
+                            <path
+                                d="M619.52 512V215.04h194.56v172.032h-133.12v81.92h174.08l40.96-40.96V174.08l-40.96-40.96h-276.48l-40.96 40.96v337.92z"
+                                fill="#3C8CE7" p-id="1272" data-spm-anchor-id="a313x.7781069.0.i6" class=""></path>
+                            <path
+                                d="M445.44 890.88h-276.48l-40.96-40.96V619.52l40.96-40.96h174.08v81.92h-133.12V808.96h194.56V215.04h-194.56v172.032h133.12v81.92h-174.08l-40.96-40.96V174.08l40.96-40.96h276.48l40.96 40.96v675.84z"
+                                fill="#3C8CE7" p-id="1273" data-spm-anchor-id="a313x.7781069.0.i3" class=""></path>
+                        </svg>
+                        <span style="font-size: 13px;">选择分类</span>
+                    </div>
+                    <div class="cate cateBox" id="cateBox">
+                        {volist name="goods_category" id="vo"}
+                        <div class="cate-box" data-key="{$vo.id}">
+                            <p>{$vo.name}</p>
+                            <div>商品数量：10</div>
+                        </div>
+                        {/volist}
+                        <!-- <div class="cate-box cate-box-select" data-key="1">
+                            <p>苹果账号</p>
+                            <div>商品数量：12</div>
+                        </div>
+                        <div class="cate-box " data-key="2">
+                            <p>谷歌账号-google</p>
+                            <div>商品数量：4</div>
+                        </div>
+                        <div class="cate-box " data-key="3">
+                            <p>推特账号-Twitter</p>
+                            <div>商品数量：4</div>
+                        </div>
+                        <div class="cate-box " data-key="4">
+                            <p>INS账号-lnstagram</p>
+                            <div>商品数量：4</div>
+                        </div>
+                        <div class="cate-box " data-key="5">
+                            <p>脸书-Facebook</p>
+                            <div>商品数量：6</div>
+                        </div>
+                        <div class="cate-box " data-key="6">
+                            <p>Youtube油管账号</p>
+                            <div>商品数量：4</div>
+                        </div>
+                        <div class="cate-box " data-key="7">
+                            <p>TikTOK账号</p>
+                            <div>商品数量：6</div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        //点击分类
+        $('.cate-box').click(function() {
+            $('.cate-box').removeClass('cate-box-select');
+            $(this).addClass("cate-box-select");
+            var key = $(this).data("key");
+            $(".goods-list").hide();
+            $(".goods-list-" + key).show();
+    
+    
+            var div = document.getElementById('cateBox');
+            var width = div.scrollWidth;
+            var mrg = $(this)[0].offsetLeft;
+            // console.log(mrg)
+            $('#cateBox').animate({ scrollLeft: mrg - 120 + 'px' });
+            // console.log(width)
+        })
+    
+        $("#search").on("input",function(e){
+            var txt_pc = $("#search").val();
+            if($.trim(txt_pc)!="") {
+                $(".product").hide().filter(":contains('"+txt_pc+"')").show();
+            }else {
+                $(".product").show();
+            }
+        });
+    </script>
+
+    <!-- {if condition="!empty($template_config.gg_status)"}
+    <style>
+        .gonggao p{
+            margin-bottom: 8px;
+        }
+    </style>
+    <div class="nav-lock">
+        <div class="main">
+            <div class="layui-row">
+                <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+                    <div class="main-box gonggao" style="padding: 12px 20px;">{$template_config.gonggao}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {/if} -->
+
+
+    <!-- 分类及商品 -->
+    {volist name="goods_category" id="vo"}
+    <div class="main">
+        <div class="layui-row">
+            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+                <div class="main-box">
+                    <p class="title-2" style="padding-left: 10px;"><span>{$vo.name}</span></p>
+                    <div class="goods">
+                        <div class="goods-list goods-list-{$vo.id}">
+                            {volist name="goods" id="v"}
+                            {if condition="$vo.id == $v.category_id"}
+                            <a href="/goods/{$v.id}.html" data-id="14" data-stock="123" class="goods-box product">
+                                <div class="goodsItem">
+                                    <div class="imgBox">
+                                        <img src="{$v.cover}" onerror="javascript:this.src='/assets/img/none.jpg';">
+                                    </div>
+                                    <div class="goodDesc" >
+                                        <div class="goods-name">{$v.name}</div>
+                                        <div class="goods-price">￥{:goodsPrice($v.price, $user, $agency)}</div>
+                                        <div class="goods-num">
+                                            <div><p style="width: 68%;"></p></div>
+                                            <span style="float: right;">库存 68</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                            {/if}
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {/volist}
+    <!-- <section class="py-5 border-bottom">
+        <div class="container px-5 my-5 px-5">
+            <div class="text-center mb-5">
+                <h2 class="fw-bolder">{$template_config.bottom_title}</h2>
+                <p class="lead mb-0">{$template_config.bottom_title_des}</p>
+            </div>
+            <div class="row gx-5 justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex">
+                                <div class="flex-shrink-0"><i class="bi bi-chat-right-quote-fill text-primary fs-1"></i>
+                                </div>
+                                <div class="ms-4">
+                                    <p class="mb-1">我们的工作时间：{$template_config.job_time}</p>
+                                    <p class="mb-1 mt-2 sm text-muted">{$template_config.job_des}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section> -->
+
+{/block}
+
+{block name="footjs"}
+
+{/block}
