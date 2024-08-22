@@ -1,7 +1,5 @@
 <?php
 
-
-
 function pay($param, $info = null) {
     if($info == null){
         $plugin_path = ROOT_PATH . "content/epay/";
@@ -68,9 +66,6 @@ function getSign($data, $secret_key) {
     reset($data);
     //把数组所有元素，按照“参数=参数值”的模式用“&”字符拼接成字符串
     $prestr  = "";
-
-
-    // print_r($data);die;
 
     foreach ($data as $key=>$val) {
         $prestr.=$key."=".$val."&";

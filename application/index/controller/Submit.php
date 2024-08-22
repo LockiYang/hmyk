@@ -3,11 +3,9 @@
 namespace app\index\controller;
 
 use app\common\controller\IndexCommon;
-use hehe\Verify;
-use think\Db;
 
-
-class Submit extends IndexCommon {
+class Submit extends IndexCommon
+{
 
 
     protected $noNeedRight = ['*'];
@@ -17,23 +15,24 @@ class Submit extends IndexCommon {
 
 
 
-    public function index() {
+    public function index()
+    {
 
         $params = json_decode(base64_decode($this->request->param('data')), true);
-        
+
         $gateway_url = $params['gateway_url'];
         unset($params['gateway_url']);
         $this->submitForm($gateway_url, $params);
-        
     }
 
 
 
 
 
-    protected function submitForm($url, $data){
+    protected function submitForm($url, $data)
+    {
         $sHtml = "<form id='form-box' action='" . $url . "' method='POST'>";
-        foreach($data as $key => $val) {
+        foreach ($data as $key => $val) {
             $val = str_replace("'", "&apos;", $val);
             $sHtml .= "<input type='hidden' name='" . $key . "' value='" . $val . "'/>";
         }
@@ -43,6 +42,4 @@ class Submit extends IndexCommon {
         echo $sHtml;
         die();
     }
-
-
 }
