@@ -13,8 +13,6 @@ class Submit extends IndexCommon
 
     protected $layout = '';
 
-
-
     public function index()
     {
 
@@ -24,10 +22,6 @@ class Submit extends IndexCommon
         unset($params['gateway_url']);
         $this->submitForm($gateway_url, $params);
     }
-
-
-
-
 
     protected function submitForm($url, $data)
     {

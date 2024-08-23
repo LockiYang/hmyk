@@ -5,10 +5,10 @@
 {/block}
 
 {block name="content"}
-    <div class="main">
+    <div class="card">
         <div class="layui-row">
             <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
-                <div class="main-box goods-detail">
+                <div class="card-box goods-detail">
                     <div class="layui-col-md4 layui-col-sm12">
                         <div class="goods-img">
                             <img class="viewer-pictures" src="{$goods.cover}" onerror="javascript:this.src='/assets/img/none.jpg';" alt="">
@@ -47,7 +47,8 @@
                             </div>
                         </div>
                         <!-- 处理支付选择 -->
-                        <div id="pay-type">
+                        <div class="pay-box" id="pay-type">
+                            <div class="pay-box-title">选择支付方式</div>
                             {volist name="pay_list" id="vo"}
                             <span class="pay-type btn {eq name='key' value='0'}active{/eq}" data-pay-type="{$vo.value}" style="    padding: 5px 16px;">
                                 {if condition="$vo.value == 'alipay'"}
@@ -70,12 +71,14 @@
                                 <span style="float: left; line-height: 26px; margin-left: 8px;">{$vo.name}</span>
                             </span>
                             {/volist}
-                            <span class="pay-type btn {if condition='!$user'}disabled{/if}" data-pay-type="balance">
-                                <span style="float: left;">
-                                    <svg class="icon" style="width: 20px; margin-top: 3px; vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6985"><path d="M138.273033 277.445811c0-75.985159 62.187854-138.272994 138.272993-138.272993h594.38391c75.985159 0 138.272994 62.187854 138.272993 138.272993V858.032416c0 75.985159-62.187854 138.272994-138.272993 138.272993H276.546026c-75.985159 0-138.272994-62.187854-138.272993-138.272993V277.445811z m0 0" fill="#BAB2A5" p-id="6986"></path><path d="M1023.000234 143.371998C1023.000234 64.587385 956.613201 0.999805 876.428862 0.999805h-729.85745C66.387073 0.899824 0.000039 64.587385 0.000039 143.371998v709.161492c0 80.184339 66.387034 143.77192 146.571373 143.771919h729.85745c80.184339 0 146.571373-63.587581 146.571372-142.372193v-62.187854c0-8.298379-5.498926-13.797305-13.797305-13.797305s-13.797305 5.498926-13.797305 13.797305v62.187854c0 63.587581-53.889475 114.777583-118.876782 114.777583h-729.85745c-64.987307 0-118.876782-51.190002-118.876782-114.777583V143.371998c0-63.587581 53.889475-114.777583 118.876782-114.777583h729.85745c64.987307 0 118.876782 51.190002 118.876782 114.777583v62.187854c0 8.298379 5.498926 13.797305 13.797305 13.797305s13.797305-5.498926 13.797305-13.797305v-62.187854z m0 0" fill="#25232E" p-id="6987"></path><path d="M329.035774 512.399922c0 99.580551 80.184339 179.664909 179.664909 179.664909h511.500098V332.735013H508.800664c-99.580551 0-179.76489 80.184339-179.76489 179.664909z m663.570397 152.070299H508.800664c-84.283538 0-152.070299-67.78676-152.070299-152.070299s67.68678-152.070299 152.070299-152.070299h483.805507v304.140598z m0 0" fill="#25232E" p-id="6988"></path><path d="M445.213083 512.399922c0 36.592853 29.6942 66.387034 66.387034 66.387034 36.592853 0 66.387034-29.6942 66.387034-66.387034s-29.6942-66.387034-66.387034-66.387034c-36.692833 0.09998-66.387034 29.794181-66.387034 66.387034z m0 0" fill="#25232E" p-id="6989"></path></svg>
+                            {if condition="$user"}
+                                <span class="pay-type btn {if condition='!$user'}disabled{/if}" data-pay-type="balance">
+                                    <span style="float: left;">
+                                        <svg class="icon" style="width: 20px; margin-top: 3px; vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6985"><path d="M138.273033 277.445811c0-75.985159 62.187854-138.272994 138.272993-138.272993h594.38391c75.985159 0 138.272994 62.187854 138.272993 138.272993V858.032416c0 75.985159-62.187854 138.272994-138.272993 138.272993H276.546026c-75.985159 0-138.272994-62.187854-138.272993-138.272993V277.445811z m0 0" fill="#BAB2A5" p-id="6986"></path><path d="M1023.000234 143.371998C1023.000234 64.587385 956.613201 0.999805 876.428862 0.999805h-729.85745C66.387073 0.899824 0.000039 64.587385 0.000039 143.371998v709.161492c0 80.184339 66.387034 143.77192 146.571373 143.771919h729.85745c80.184339 0 146.571373-63.587581 146.571372-142.372193v-62.187854c0-8.298379-5.498926-13.797305-13.797305-13.797305s-13.797305 5.498926-13.797305 13.797305v62.187854c0 63.587581-53.889475 114.777583-118.876782 114.777583h-729.85745c-64.987307 0-118.876782-51.190002-118.876782-114.777583V143.371998c0-63.587581 53.889475-114.777583 118.876782-114.777583h729.85745c64.987307 0 118.876782 51.190002 118.876782 114.777583v62.187854c0 8.298379 5.498926 13.797305 13.797305 13.797305s13.797305-5.498926 13.797305-13.797305v-62.187854z m0 0" fill="#25232E" p-id="6987"></path><path d="M329.035774 512.399922c0 99.580551 80.184339 179.664909 179.664909 179.664909h511.500098V332.735013H508.800664c-99.580551 0-179.76489 80.184339-179.76489 179.664909z m663.570397 152.070299H508.800664c-84.283538 0-152.070299-67.78676-152.070299-152.070299s67.68678-152.070299 152.070299-152.070299h483.805507v304.140598z m0 0" fill="#25232E" p-id="6988"></path><path d="M445.213083 512.399922c0 36.592853 29.6942 66.387034 66.387034 66.387034 36.592853 0 66.387034-29.6942 66.387034-66.387034s-29.6942-66.387034-66.387034-66.387034c-36.692833 0.09998-66.387034 29.794181-66.387034 66.387034z m0 0" fill="#25232E" p-id="6989"></path></svg>
+                                    </span>
+                                    <span style="float: left; line-height: 26px; margin-left: 8px;">余额支付 &yen; {$user.money|default='0.00'}</span>
                                 </span>
-                                <span style="float: left; line-height: 26px; margin-left: 8px;">余额支付 &yen; {$user.money|default='0.00'}</span>
-                            </span>
+                            {/if}
                         </div>
                         <!-- 处理未登录用户购买 -->
                         {if condition="!$user"}
@@ -113,17 +116,15 @@
             </div>
         </div>
     </div>
-    <div class="main">
-        <div class="layui-row">
-            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
-                <div class="main-box goods-detail">
-                    <div class="title" style="border-bottom: 1px solid #f7f7f7;padding-bottom: 5px">
-                        <embed class="svg" src="https://apple.id591.com/content/template/default/svg/spjs.svg" type="image/svg+xml" />
-                        <span>商品描述</span>
-                    </div>
-                    <div class="intro">
-                        {$goods.detail}
-                    </div>
+    <div class="layui-row">
+        <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
+            <div class="main-box goods-detail">
+                <div class="title" style="border-bottom: 1px solid #f7f7f7;padding-bottom: 5px">
+                    <embed class="svg" src="https://apple.id591.com/content/template/default/svg/spjs.svg" type="image/svg+xml" />
+                    <span>商品描述</span>
+                </div>
+                <div class="intro">
+                    {$goods.detail}
                 </div>
             </div>
         </div>
