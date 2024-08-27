@@ -9,7 +9,7 @@ return [
     // 应用命名空间
     'app_namespace'          => 'app',
     // 应用调试模式
-    'app_debug'              => Env::get('app.debug', true),
+    'app_debug'              => Env::get('app.debug', false),
     // 应用Trace
     'app_trace'              => Env::get('app.trace', false),
     // 应用模式状态
@@ -126,7 +126,7 @@ return [
         'taglib_begin' => '{',
         // 标签库标签结束标记
         'taglib_end'   => '}',
-        'tpl_cache'    => false,
+        'tpl_cache'    => true,
     ],
     // 视图输出字符串内容替换,留空则会自动进行计算
     'view_replace_str'       => [
