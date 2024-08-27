@@ -12,3 +12,4 @@ composer.lock
 node_modules
 .user.ini
 .DS_Store
+install.lock
