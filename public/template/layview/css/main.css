@@ -67,64 +67,6 @@ a {
   margin: 0 10px;
 } */
 
-.header {
-  position: fixed;
-  top: 0px;
-  z-index: 1000;
-  width: 100%;
-  height: 58px;
-  border-bottom: 1px solid #e9ecf3;
-  background-color: #fff;
-  box-shadow: 0 0 0.6rem 0 #d0d0d0;
-}
-
-.header .header-box {
-  padding: 6px 0px;
-}
-
-.header .header-box img {
-  max-width: 150px;
-  max-height: 45px;
-}
-
-.header .header-box .info {
-  font-size: 16px;
-  font-weight: 700;
-  color: #000000;
-  display: inline-block;
-  margin-left: 10px;
-  vertical-align: middle;
-}
-
-@media (max-width: 768px) {
-  .header .header-box img {
-    margin: auto;
-  }
-
-  .header .header-box .info {
-    display: none;
-  }
-}
-
-.header .header-box .query {
-  float: right;
-}
-
-.header .header-box .query a {
-  color: #000;
-  margin-top: 4px;
-  display: inline-block;
-  width: 95px;
-  line-height: 35px;
-  border-radius: 19px;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  text-align: center;
-}
-
 /*内容*/
 #content {
   margin-top: 60px;
