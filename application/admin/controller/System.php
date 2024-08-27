@@ -8,11 +8,12 @@ use think\exception\PDOException;
 use think\exception\ValidateException;
 
 /**
- * 测试管理
+ * 系统配置
  *
  * @icon fa fa-circle-o
  */
-class System extends Backend {
+class System extends Backend
+{
 
     /**
      * System模型对象
@@ -20,19 +21,20 @@ class System extends Backend {
      */
     protected $model = null;
 
-    public function _initialize() {
+    public function _initialize()
+    {
         parent::_initialize();
         $this->model = new \app\admin\model\System;
-
     }
 
 
-    public function index() {
+    public function index()
+    {
 
         if (false === $this->request->isPost()) {
             $res = db::name('options')->select();
             $options = [];
-            foreach($res as $val){
+            foreach ($res as $val) {
                 $options[$val['name']] = $val['value'];
             }
             $options['buy_input'] = unserialize($options['buy_input']);
@@ -45,17 +47,17 @@ class System extends Backend {
         if (empty($params)) {
             $this->error(__('Parameter %s can not be empty', ''));
         }
-        if(isset($params['row'])) unset($params['row']);
+        if (isset($params['row'])) unset($params['row']);
 
         $params['buy_input'] = array_filter($params['buy_input']);
         $params['buy_input'] = serialize($params['buy_input']);
 
-//        print_r($params);die;
+        //        print_r($params);die;
 
         $result = false;
         Db::startTrans();
         try {
-            foreach($params as $key => $val){
+            foreach ($params as $key => $val) {
                 $result = db::name('options')->where(['name' => $key])->update(['value' => $val]);
             }
             Db::commit();
@@ -75,6 +77,4 @@ class System extends Backend {
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-
-
 }

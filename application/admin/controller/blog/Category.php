@@ -30,7 +30,7 @@ class Category extends Backend
         $this->categorylist = $tree->getTreeList($tree->getTreeArray(0), 'name');
         $categorydata = [0 => ['type' => 'all', 'name' => __('None')]];
         foreach ($this->categorylist as $k => $v) {
-            if($v['pid'] == 0) $categorydata[$v['id']] = $v;
+            if ($v['pid'] == 0) $categorydata[$v['id']] = $v;
         }
         $this->view->assign("parentList", $categorydata);
     }
@@ -38,7 +38,8 @@ class Category extends Backend
     /**
      * 查看
      */
-    public function index() {
+    public function index()
+    {
         //设置过滤方法
         $this->request->filter(['strip_tags']);
         if ($this->request->isAjax()) {
@@ -77,7 +78,8 @@ class Category extends Backend
     /**
      * 添加
      */
-    public function add() {
+    public function add()
+    {
         if ($this->request->isPost()) {
             $this->token();
         }
@@ -87,7 +89,8 @@ class Category extends Backend
     /**
      * 编辑
      */
-    public function edit($ids = null) {
+    public function edit($ids = null)
+    {
         $row = $this->model->get($ids);
         if (!$row) {
             $this->error(__('No Results were found'));
@@ -142,7 +145,8 @@ class Category extends Backend
      *
      * @internal
      */
-    public function selectpage() {
+    public function selectpage()
+    {
         return parent::selectpage();
     }
 
@@ -153,6 +157,4 @@ class Category extends Backend
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-
-
 }

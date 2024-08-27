@@ -14,7 +14,8 @@ use think\exception\ValidateException;
  *
  * @icon fa fa-circle-o
  */
-class Blog extends Backend {
+class Blog extends Backend
+{
 
 	/**
 	 * Blog模型对象
@@ -22,7 +23,8 @@ class Blog extends Backend {
 	 */
 	protected $model = null;
 
-	public function _initialize() {
+	public function _initialize()
+	{
 		parent::_initialize();
 		$this->model = new \app\admin\model\blog\Blog;
 		$this->category_model = new \app\admin\model\blog\Category;
@@ -41,7 +43,8 @@ class Blog extends Backend {
 
 	//
 
-	public function add() {
+	public function add()
+	{
 		if (false === $this->request->isPost()) {
 			return $this->view->fetch();
 		}
@@ -67,7 +70,7 @@ class Blog extends Backend {
 			}
 			$result = $this->model->allowField(true)->save($params);
 			Db::commit();
-		} catch (ValidateException|PDOException|Exception $e) {
+		} catch (ValidateException | PDOException | Exception $e) {
 			Db::rollback();
 			$this->error($e->getMessage());
 		}
@@ -78,7 +81,8 @@ class Blog extends Backend {
 	}
 
 
-	public function edit($ids = null) {
+	public function edit($ids = null)
+	{
 		$row = $this->model->get($ids);
 		if (!$row) {
 			$this->error(__('No Results were found'));
@@ -107,7 +111,7 @@ class Blog extends Backend {
 			}
 			$result = $row->allowField(true)->save($params);
 			Db::commit();
-		} catch (ValidateException|PDOException|Exception $e) {
+		} catch (ValidateException | PDOException | Exception $e) {
 			Db::rollback();
 			$this->error($e->getMessage());
 		}
@@ -123,6 +127,4 @@ class Blog extends Backend {
 	 * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
 	 * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
 	 */
-
-
 }
