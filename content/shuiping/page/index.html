@@ -1,0 +1,378 @@
+{extend name="../content/shuiping/page/layout/default" /}
+{block name="main"}
+{:doAction('indexHead')}
+
+<style>
+    .content.container{
+        min-height: calc(100% - 60.4px);
+    }
+    .category-btn{
+        font-size: 13px;
+        line-height: 13px;
+        border: 1.5px solid rgb(167 167 167 / 20%);
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        font-weight: 500;
+        color: #010101;
+        padding: 10px 26px;
+        border-radius: 1px;
+        margin-right: 10px;
+        margin-bottom: 15px;
+        border-radius: 3px;
+        -webkit-box-shadow: 0 1px 1px rgba(32,35,51,.04), 0 2px 4px rgba(32,35,51,.02)!important;
+        box-shadow: 4px 4px 1px -1px rgba(32,35,51,.04), 0 2px 4px rgba(32,35,51,.02)!important;
+        display: inline-block;
+        background: #fff;
+        user-select: none;
+    }
+    .category-btn.active{
+        border: 2px solid #4aadff;
+        padding: 9px 25px!important;
+        color: #fff;
+        background: #4aadff;
+    }
+    .category-btn:hover{
+        border: 2px solid #4aadff!important;
+        padding: 9px 25px!important;
+    }
+
+    .col-lg-2dot4 {
+        position: relative;
+        min-height: 1px;
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+    @media (min-width: 1200px) {
+        .col-lg-2dot4 {
+            float: left;
+        }
+        .col-lg-2dot4 {
+            width: 20%;
+        }
+        .col-lg-pull-2dot4 {
+            right: 20%;
+        }
+        .col-lg-push-2dot4 {
+            left: 20%;
+        }
+        .col-lg-offset-2dot4 {
+            margin-left: 20%;
+        }
+    }
+
+    .panel-default > .panel-heading{
+        padding: 7px 0;
+    }
+
+
+
+     .tb-recommend-content-item {
+         position: relative;
+         float: left;
+         width: 100%;
+         margin: 0 0 12px 0px;
+         overflow: hidden;
+         color: #333;
+         border-bottom: 1px solid #f1f1f1;
+         padding-bottom: 10px;
+         cursor: pointer;
+         -webkit-transition: all 0.5s;
+         -o-transition: all 0.5s;
+         -moz-transition: all 0.5s;
+         transition: all 0.5s;
+     }
+    .tb-recommend.col3 .tb-recommend-content-item, .tb-recommend.col3 .skeleton-i {
+        width: 372px;
+        margin-left: 18px;
+    }
+    .tb-recommend-content-item .item-link {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+    }
+    .tb-recommend-content-item .img-wrapper {
+        position: absolute;
+        width: 75px;
+        height: 75px;
+        overflow: hidden;
+        background-color: rgba(27, 23, 67, 0.03);
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+    }
+
+
+    .img-wrapper img {
+        background: #fff;
+        opacity: .9;
+        filter: alpha(opacity=90);
+        -webkit-transition: all .2s;
+        -moz-transition: all .2s;
+        -o-transition: all .2s;
+        transition: all .2s;
+    }
+    .tb-recommend-content-item .img-wrapper img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+    }
+    .tb-recommend-content-item .info-wrapper {
+        margin-left: 92px;
+        overflow: hidden;
+    }
+    .tb-recommend-content-item .info-wrapper .title {
+        display: inline-block;
+        max-height: 46px;
+        margin: 2px 0 2px 0;
+        overflow: hidden;
+        color: #333;
+        font-size: 14px;
+        line-height: 23px;
+    }
+    .tb-recommend-content-item .info-wrapper .title img {
+        height: 16px;
+        margin-top: 3px;
+        margin-right: 6px;
+        vertical-align: top;
+    }
+    .tb-recommend-content-item .info-wrapper .tag-list {
+        height: 20px;
+        overflow: hidden;
+    }
+    .tb-recommend-content-item .info-wrapper .tag-list .tag-item {
+        display: inline-block;
+        height: 20px;
+        margin-right: 6px;
+        padding: 0 4px;
+        color: #ff5000;
+        font-size: 12px;
+        line-height: 18px;
+        vertical-align: top;
+        border: 1px solid #ff5000;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+    }
+
+    .price-value {
+        display: inline-block;
+        font-size: 16px;
+        color: #dc3545;
+    }
+    .price-value em {
+        margin-right: 4px;
+        font-size: 13px;
+        font-family: "Microsoft Yahei";
+        vertical-align: middle;
+        font-style: normal;
+    }
+    .hot-goods .tb-recommend-content-item:last-child{
+        margin-bottom: 0!important;
+        border: unset;
+        padding-bottom: 0;
+    }
+    .table-goods{
+        background: #fdfdfd;
+        margin-bottom: 15px;
+        padding: 10px;
+        border-color: #fff;
+        padding-bottom: 5px;
+    }
+    .table-goods:hover{
+        background: #f4f4f4;
+    }
+
+    .swiper {
+        width: 100%;
+        height: 100%;
+    }
+
+    .swiper-slide {
+        text-align: center;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        -webkit-align-items: center;
+        align-items: center;
+    }
+
+    .swiper-slide img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    z
+
+    .swiper-horizontal>.swiper-scrollbar, .swiper-scrollbar.swiper-scrollbar-horizontal{
+        bottom: 0;
+        width: 30px;
+        left: 50%;
+        margin-left: -15px;
+    }
+
+</style>
+{:doAction('index_head')}
+<div class="page-container home " style="margin-top: 1px;">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-9">
+            {if condition="!empty($template_config.gg_status)"}
+            <div style="background: #fff; padding: 15px; padding-bottom: 5px; margin-bottom: 20px;" class="shadow pc-hidden">
+                {$template_config.gonggao}
+            </div>
+            {/if}
+            <div id="md"></div>
+            <div style="margin-top: 0px; margin-bottom: 18px;" class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    {php}$active = -1; {/php}
+                    {volist name="category" id="vo" key="key"}
+                    {if condition="$vo.pid == 0"}
+                    {php}
+                    if($active == -1 && !empty($vo['active'])) $active = $key - 1;
+                    {/php}
+                    <a style="width: auto;" href="{:url('/goodscate/' . $vo.id)}#md" class="swiper-slide category-btn {if condition='!empty($vo.active)'}active{/if}">{$vo.name}</a>
+                    {/if}
+                    {/volist}
+                </div>
+                <div class="swiper-scrollbar"></div>
+            </div>
+
+            <?php $n = 0; ?>
+
+            {volist name="goods_category" id="vo"}
+            <div class="col-xs-12 col-sm-12 col-md-12" style="padding: 0;">
+                <div class="panel panel-default shadow" style="">
+                    <div class="panel-heading">
+                        <h4><i class="fa fa-fw fa-css3"></i>{$vo.name}</h4>
+                    </div>
+                    <div class="panel-body row" style="padding: 15px 0;">
+                        {volist name="vo.goods" id="v"}
+                        <?php $n++; ?>
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                            <div class="tb-recommend-content-item table-goods shadow">
+                                <a href="{:url('/goods/' . $v.id)}" class="item-link">
+                                    <div class="img-wrapper">
+                                        <img src="{$v.cover}" onerror="this.src='/assets/img/none.jpg'" alt="{$v.name}">
+                                    </div>
+                                    <div class="info-wrapper">
+                                        <div class="title" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; word-break:break-all; display: block; margin-top: 0px;">{$v.name}</div>
+                                        {if condition="$v.type == 'alone' || $v.type == 'fixed'"}
+                                        <span class="goods-tag text-success">自动发货</span>
+                                        {else /}
+                                        <span class="goods-tag text-info">手动发货</span>
+                                        {/if}
+                                        {if condition="$template_config.stock"}
+                                        <span class="goods-tag text-danger">库存 {$v.stock}</span>
+                                        {/if}
+                                        {if condition="$template_config.sales"}
+                                        <span class="goods-tag text-warning">销量 {:$v.invented_sales ? $v.invented_sales : $v.sales}</span>
+                                        {/if}
+                                        <div class="tag-list" style="margin-top: -3px;">
+
+                                            <span class="price-value"><em>¥</em>{$v.init_price}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+            {/volist}
+            {if condition="$n > 4"}
+            <div style="margin-top: 20px;" class="pc-hidden">
+                {volist name="category" id="vo"}
+                {if condition="$vo.pid == 0"}
+                <a href="{:url('/goodscate/' . $vo.id)}#md" class="category-btn {if condition='!empty($vo.active)'}active{/if}">{$vo.name}</a>
+                {/if}
+                {/volist}
+            </div>
+            {/if}
+        </div>
+
+        <div class="col-xs-12 col-sm-6 col-md-3 mobile-hidden">
+            <div class="panel panel-default shadow" style="">
+                <div class="panel-heading">
+                    <h4><i class="fa fa-fw fa-css3"></i>网站公告</h4>
+                </div>
+                <div class="panel-body hot-goods" style="padding: 15px 0;">
+                    {if condition="!empty($template_config.gg_status)"}
+                        {$template_config.gonggao}
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {if condition="!empty($template_config.blog) && $blog"}
+    <div class="page-section bestsellers cont-mb-20">
+        <div class="page-margin__content">
+            <div class="page-section__header">
+                <h2>网站新闻</h2>
+            </div>
+            <div class="page-section__body">
+                <div class="products-grid">
+                    <div class="row products-grid-row" style="display: flex; -ms-flex-wrap: wrap; flex-wrap: wrap;">
+                        {volist name="$blog" id="vo"}
+                        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 grid-item-col">
+                            <div class="grid-item">
+                                <div class="product-grid-item">
+                                    <div class="product">
+                                        <a class="a-block" href="{:url('/blog/' . $vo.id)}">
+                                            <div class="product__image">
+                                                <img src="{$vo.cover}" alt="{$vo.title}" onerror="this.src='/assets/img/none.jpg'">
+                                            </div>
+                                        </a>
+                                        <div class="product__description">
+                                            <div class="product_name" style="height: 57px;">
+                                                <a href="{:url('/blog/' . $vo.id)}">{$vo.title}</a>
+
+                                                <span class="article__caption">{$vo.description}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {/if}
+</div>
+{/block}
+
+{block name="footjs"}
+<script>
+    var pcSwiper = new Swiper(".mySwiper", {
+        slidesPerView: "auto",
+        spaceBetween: 0,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+        scrollbar: {
+            el: ".swiper-scrollbar",
+            hide: false,
+            dragSize: 15
+        },
+    });
+    pcSwiper.slideTo("{$active}", 1000, false)
+</script>
+{:doAction('indexFoot')}
+{/block}

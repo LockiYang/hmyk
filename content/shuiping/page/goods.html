@@ -1,0 +1,693 @@
+{extend name="../content/shuiping/page/layout/default" /}
+{block name="main"}
+<style>
+    .count {
+        border: 1.5px solid #e9ecef;
+        display: inline-block;
+        border-radius: .25rem;
+    }
+
+    .count__ctrl {
+        padding: 5px 15px;
+        background: #e9ecef;
+    }
+
+    .count__num {
+        padding: 0 10px;
+    }
+
+    .goods-detail img{
+        max-width: 100%;
+    }
+
+
+    .form div.form-group div.email-input {
+        margin-bottom: 10px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+        flex-direction: row;
+        -ms-flex-wrap: nowrap;
+        flex-wrap: nowrap
+    }
+
+
+    .form div.form-group div.email-input button.subscribe-btn svg {
+        width: 20px;
+        height: 20px;
+        stroke: #fff
+    }
+
+
+    .form div.form-group div.subscribe-tos span {
+        display: block;
+        font-size: 14px;
+        color: #010101;
+        line-height: 1.4;
+        font-weight: 400
+    }
+
+    .form div.form-group div.subscribe-tos span a {
+        color: #067aff;
+        font-weight: 500;
+        text-decoration: none
+    }
+    .pay-type, .select-specs{
+        font-size: 13px;
+        line-height: 13px;
+        border: 1.5px solid rgb(167 167 167 / 20%);
+        -webkit-box-shadow: none;
+        box-shadow: none;
+        font-weight: 500;
+        color: #010101;
+        padding: 5px 16px;
+        border-radius: 1px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        border-radius: 3px;
+
+        -webkit-box-shadow: 0 1px 1px rgba(32,35,51,.04), 0 2px 4px rgba(32,35,51,.02)!important;
+        box-shadow: 4px 4px 1px -1px rgba(32,35,51,.04), 0 2px 4px rgba(32,35,51,.02)!important;
+    }
+    .select-specs{
+        padding: 8px 15px;
+    }
+    .pay-type.disabled{
+        border-color: #ddd;
+        color: #060606;
+        background: #f3f3f3;
+        -webkit-box-shadow: 0 1px 1px rgba(32,35,51,.04), 0 2px 4px rgba(32,35,51,.02);
+        box-shadow: 4px 4px 1px -1px rgba(32,35,51,.04), 0 2px 4px rgba(32,35,51,.02);
+    }
+    .btn.disabled{
+        color: #8b8b8b;
+    }
+    .pay-type.active, .select-specs.active{
+        border: 2px solid #4aadff;
+        padding: 4px 15px!important;
+        /*background: #4aadff;*/
+        /*color: #fff;*/
+    }
+    .select-specs.active{
+        border: 2px solid #4aadff;
+        padding: 8px 14px!important;
+    }
+    {if condition="$goods.init_price == 0"}
+    #pay-type-box{
+        display: none;
+    }
+    {/if}
+</style>
+<div class="page-container product" style="margin-top: 10px;">
+    <!-- ~~~~~~~~~~~~~~~~~ Product page breadcrumbs section [START] ~~~~~~~~~~~~~~~~~ -->
+    <div class="page-margin__content mobile-hidden">
+        <nav class="breadcrumbs">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{:url('/')}">网站首页</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{:url('/goodscate/' . $category.id)}">{$category.name}</a>
+                </li>
+                <li class="breadcrumb-item active">{$goods.name}</li>
+            </ol>
+        </nav>
+    </div>
+    <!-- ~~~~~~~~~~~~~~~~~ Product page breadcrumbs section [END] ~~~~~~~~~~~~~~~~~ -->
+    <!-- ~~~~~~~~~~~~~~~~~ Product page details section [START] ~~~~~~~~~~~~~~~~~ -->
+    <div class="page-section prod-details" style="margin-bottom: 0px;">
+        <div class="page-margin__content">
+            <div class="prod-details__body">
+                <div class="row ">
+                    <div class="col-lg-9 col-xs-12 " style="margin-bottom: 20px;">
+                        <div class="col-12">
+                            <div class="prod-details-gwrap" style="border-radius: 3px;">
+                                <div class="row">
+                                    <div class="col-lg-4 col-xs-12 goods-page-cover">
+                                        <img style="width: 100%;" class="" src="{$goods.cover}" alt="{$goods.name}" onerror="this.src='/assets/img/none.jpg'">
+                                    </div>
+                                    <div class="col-lg-8 col-xl-7 col-12 mobile-padding">
+                                        <div class="prod-details__prod-name">
+                                            <h1 style="font-size: 20px; padding: 0px 0 10px 0; line-height: 150%; margin-top: 0;">{$goods.name}</h1>
+                                        </div>
+                                        <div class="info-wrapper pc-hidden" style="margin-bottom: 5px; margin-top: 0px;">
+                                            {if condition="$goods.type == 'alone' || $goods.type == 'fixed'"}
+                                            <span class="goods-tag text-success">自动发货</span>
+                                            {else /}
+                                            <span class="goods-tag text-info">手动发货</span>
+                                            {/if}
+                                            {if condition="$template_config.stock"}
+                                            <span class="goods-tag text-danger">库存 <span class="init-stock">{$goods.init_stock}</span></span>
+                                            {/if}
+                                            {if condition="$template_config.sales"}
+                                            <span class="goods-tag text-warning">销量 {:$goods.invented_sales ? $goods.invented_sales : $goods.sales}</span>
+                                            {/if}
+                                        </div>
+                                        <div class="variations">
+                                            <div class="variations__title">
+                                                <span>
+                                                    购买数量：
+                                                    <div class="count">
+                                                        <button data-qty-control="minus" class="btn count__ctrl">-</button>
+                                                        <input type="text" class="count__num" id="buy-num" value="1" style="border: unset; width: 50px; text-align: center;">
+                                                        <button data-qty-control="plus" class="btn count__ctrl">+</button>
+                                                    </div>
+                                                </span>
+                                            </div>
+                                            <div class="variations__list">
+                                                <div class="cart-item__counter">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {if condition="$goods.is_sku == 1"}
+                                        <div class="variations">
+                                            <div class="variations__title" style="padding: 20px 0 10px 0;">
+                                                <span>{$goods.sku_name}</span>
+                                            </div>
+                                            <div class="variations__list" id="buy-specs">
+                                                {volist name="$goods.sku" id="vo"}
+                                                <span data-stock="{$vo.stock}" data-sku-id="{$vo.id}" data-price="{$vo.init_price}" data-crossed="{$vo.price.crossed_price}" class="{eq name='$vo.stock' value='0'}disabled{/eq} select-specs btn {if condition='isset($vo.active)'}active{/if}">{$vo.sku}{if condition="$template_config.sku_price == 1"}&yen; {$vo.init_price}{/if}</span>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                        {/if}
+                                        <div class="variations" id="pay-type-box">
+                                            <div class="variations__title" style="padding: 20px 0 10px 0;">
+                                                <span>选择支付方式</span>
+                                            </div>
+                                            <div class="variations__list" id="pay-type">
+                                                {volist name="pay_list" id="vo"}
+                                                <span class="pay-type btn {eq name='key' value='0'}active{/eq}" data-pay-type="{$vo.value}" style="    padding: 5px 16px;">
+                                                    {if condition="$vo.value == 'alipay'"}
+                                                    <span style="float: left;">
+                                                        <svg style="width: 20px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" t="1647878023515" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="2739" width="25" height="25"><defs><style type="text/css">@font-face { font-family: feedback-iconfont; src: url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff2?t=1630033759944") format("woff2"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff?t=1630033759944") format("woff"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.ttf?t=1630033759944") format("truetype"); }</style></defs><path d="M1023.795 853.64v6.348a163.807 163.807 0 0 1-163.807 163.807h-696.18A163.807 163.807 0 0 1 0 859.988v-696.18A163.807 163.807 0 0 1 163.807 0h696.181a163.807 163.807 0 0 1 163.807 163.807V853.64z" fill="#009FE9" p-id="2740"/><path d="M844.836 648.267c-40.952-14.333-95.623-34.809-156.846-57.128a949.058 949.058 0 0 0 90.094-222.573H573.325V307.14h245.711v-43.41l-245.71 2.458V143.33H472.173c-18.223 0-21.704 20.476-21.704 20.476v102.38H204.759v40.952h245.71v61.427H245.712v40.952h409.518a805.522 805.522 0 0 1-64.909 148.246c-128.384-42.795-266.186-77.604-354.233-55.08a213.564 213.564 0 0 0-112.003 63.27c-95.418 116.917-26.21 294.034 175.274 294.034 119.989 0 236.087-67.366 325.771-177.73 134.322 65.932 398.666 176.297 398.666 176.297V701.3s-32.352-4.095-178.96-53.033z m-563.702 144.97c-158.893 0-204.759-124.699-126.336-194.112a191.86 191.86 0 0 1 90.913-46.276c93.575-10.238 189.811 35.629 293.624 86.614-74.941 94.598-166.674 153.774-258.2 153.774z" fill="#FFFFFF" p-id="2741"/></svg>
+                                                    </span>
+                                                    {/if}
+                                                    {if condition="$vo.value == 'wxpay'"}
+                                                    <span style="float: left;">
+                                                        <svg style="width: 20px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" t="1647877815295" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="1939" width="25" height="25"><defs><style type="text/css">@font-face { font-family: feedback-iconfont; src: url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff2?t=1630033759944") format("woff2"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff?t=1630033759944") format("woff"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.ttf?t=1630033759944") format("truetype"); }</style></defs><path d="M395.846 603.585c-3.921 1.98-7.936 2.925-12.81 2.925-10.9 0-19.791-5.85-24.764-14.625l-2.006-3.864-78.106-167.913c-0.956-1.98-0.956-3.865-0.956-5.845 0-7.83 5.928-13.68 13.863-13.68 2.965 0 5.928 0.944 8.893 2.924l91.965 64.43c6.884 3.864 14.82 6.79 23.708 6.79 4.972 0 9.85-0.945 14.822-2.926L861.71 282.479c-77.149-89.804-204.684-148.384-349.135-148.384-235.371 0-427.242 157.158-427.242 351.294 0 105.368 57.361 201.017 147.323 265.447 6.88 4.905 11.852 13.68 11.852 22.45 0 2.925-0.957 5.85-2.006 8.775-6.881 26.318-18.831 69.334-18.831 71.223-0.958 2.92-2.013 6.79-2.013 10.75 0 7.83 5.929 13.68 13.865 13.68 2.963 0 5.928-0.944 7.935-2.925l92.922-53.674c6.885-3.87 14.82-6.794 22.756-6.794 3.916 0 8.889 0.944 12.81 1.98 43.496 12.644 91.012 19.53 139.48 19.53 235.372 0 427.24-157.158 427.24-351.294 0-58.58-17.78-114.143-48.467-163.003l-491.39 280.07-2.963 1.98z" fill="#09BB07" p-id="1940"/></svg>
+                                                    </span>
+                                                    {/if}
+
+                                                    {if condition="$vo.value == 'qqpay'"}
+                                                    <span style="float: left;">
+                                                        <svg class="icon" style="width: 20px; margin-top: 3px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10578"><path d="M512 0C229.224296 0 0 229.224296 0 512s229.224296 512 512 512 512-229.224296 512-512S794.775704 0 512 0zM801.261037 668.86163c-21.731556 18.640593-49.948444-61.345185-54.006519-49.038222-9.879704 29.923556-14.506667 49.929481-43.633778 82.507852-1.554963 1.744593 33.659259 14.468741 43.633778 41.642667 9.557333 26.017185 28.141037 67.26163-93.487407 80.213333-71.35763 7.585185-122.936889-38.020741-128.075852-37.584593-9.53837 0.83437-5.290667 0-15.530667 0-8.38163 0-8.931556 0.606815-16.820148 0-2.161778-0.170667-25.884444 37.584593-131.963259 37.584593-82.223407 0-103.518815-51.749926-86.983111-80.213333 16.535704-28.463407 44.126815-36.750222 40.239407-41.263407-19.152593-22.186667-32.350815-45.909333-40.239407-67.356444-1.953185-5.347556-3.584-10.543407-4.873481-15.530667-2.996148-11.45363-25.884444 67.204741-50.460444 49.038222-24.576-18.166519-22.376296-64.417185-6.46637-108.676741 16.042667-44.619852 56.471704-87.589926 56.926815-97.071407 1.611852-35.290074-3.489185-41.14963 0-50.422519 7.755852-20.764444 17.199407-12.8 17.199407-23.570963 0-135.736889 100.864-245.76 225.28-245.76s225.28 110.042074 225.28 245.76c0 5.195852 13.520593 0 19.986963 23.570963 1.327407 4.873481 2.23763 23.665778 0.663704 50.422519-0.739556 12.856889 34.266074 28.501333 52.375704 97.071407C828.434963 628.754963 810.30637 661.105778 801.261037 668.86163z" fill="#68A5E1" p-id="10579"></path></svg>
+                                                    </span>
+                                                    {/if}
+
+                                                    <span style="float: left; line-height: 26px; margin-left: 8px;">{$vo.name}</span>
+                                                </span>
+                                                {/volist}
+                                                <span class="pay-type btn {if condition='!$user'}disabled{/if}" data-pay-type="balance">
+                                                    <span style="float: left;">
+                                                        <svg class="icon" style="width: 20px; margin-top: 3px; vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6985"><path d="M138.273033 277.445811c0-75.985159 62.187854-138.272994 138.272993-138.272993h594.38391c75.985159 0 138.272994 62.187854 138.272993 138.272993V858.032416c0 75.985159-62.187854 138.272994-138.272993 138.272993H276.546026c-75.985159 0-138.272994-62.187854-138.272993-138.272993V277.445811z m0 0" fill="#BAB2A5" p-id="6986"></path><path d="M1023.000234 143.371998C1023.000234 64.587385 956.613201 0.999805 876.428862 0.999805h-729.85745C66.387073 0.899824 0.000039 64.587385 0.000039 143.371998v709.161492c0 80.184339 66.387034 143.77192 146.571373 143.771919h729.85745c80.184339 0 146.571373-63.587581 146.571372-142.372193v-62.187854c0-8.298379-5.498926-13.797305-13.797305-13.797305s-13.797305 5.498926-13.797305 13.797305v62.187854c0 63.587581-53.889475 114.777583-118.876782 114.777583h-729.85745c-64.987307 0-118.876782-51.190002-118.876782-114.777583V143.371998c0-63.587581 53.889475-114.777583 118.876782-114.777583h729.85745c64.987307 0 118.876782 51.190002 118.876782 114.777583v62.187854c0 8.298379 5.498926 13.797305 13.797305 13.797305s13.797305-5.498926 13.797305-13.797305v-62.187854z m0 0" fill="#25232E" p-id="6987"></path><path d="M329.035774 512.399922c0 99.580551 80.184339 179.664909 179.664909 179.664909h511.500098V332.735013H508.800664c-99.580551 0-179.76489 80.184339-179.76489 179.664909z m663.570397 152.070299H508.800664c-84.283538 0-152.070299-67.78676-152.070299-152.070299s67.68678-152.070299 152.070299-152.070299h483.805507v304.140598z m0 0" fill="#25232E" p-id="6988"></path><path d="M445.213083 512.399922c0 36.592853 29.6942 66.387034 66.387034 66.387034 36.592853 0 66.387034-29.6942 66.387034-66.387034s-29.6942-66.387034-66.387034-66.387034c-36.692833 0.09998-66.387034 29.794181-66.387034 66.387034z m0 0" fill="#25232E" p-id="6989"></path></svg>
+                                                    </span>
+                                                    <span style="float: left; line-height: 26px; margin-left: 8px;">余额支付 &yen; {$user.money|default='0.00'}</span>
+
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {if condition="$goods.wholesale"}
+                                        <div class="prod-details__specifications" style="margin-top: 15px;">
+                                            <div class="specifications">
+                                                {volist name="$goods.wholesale" id="vo"}
+                                                <div class="specifications__item">
+                                                    <div class="prop">
+                                                        <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">一次性购买{$vo.number}{$goods.unit|default='个'}</font></font></span>
+                                                    </div>
+                                                    <div class="dots"></div>
+                                                    <div class="val">
+                                                        <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">每件优惠 &yen; {$vo.offer}</font></font></span>
+                                                    </div>
+                                                </div>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="panel panel-default shadow mobile-hidden" style="margin-top: 20px;">
+                                <div class="panel-heading">
+                                    <h4><i class="fa fa-fw fa-css3"></i>商品描述</h4>
+                                </div>
+                                <div class="panel-body goods-detail" style="white-space:normal; word-break:break-all; padding: 0;">{$goods.detail}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-12">
+                        <div class="top-sticky-block-b-wrap top-sticky-block">
+                            <div class="prod-details__offering shadow">
+                                <div class="prod-offering">
+                                    {if condition="$goods.jiesheng"}
+                                    <div class="prod-offering__benefits">
+                                        <div class="precheck-benefits">
+                                            <span class="icon">
+                                                <svg width="34" height="36" viewBox="0 0 34 36" fill="none"
+                                                     xmlns="https://www.w3.org/2000/svg">
+                                                    <path d="M34 18.958C34 16.896 33.633 14.919 32.96 13.09C32.5 18.479 29.627 21.247 26.625 19.958C23.813 18.75 25.708 14.041 25.848 11.794C26.084 7.985 25.836 3.625 18.917 0C21.792 5.5 19.25 8.917 16.584 9.125C13.626 9.356 10.917 6.583 11.917 2.083C8.679 4.469 8.585 8.485 9.584 11.083C10.626 13.791 9.542 16.041 7.001 16.291C4.161 16.571 2.583 13.25 4.038 7.958C1.52 10.923 0 14.763 0 18.958C0 28.347 7.611 35.958 17 35.958C26.389 35.958 34 28.347 34 18.958Z"
+                                                          fill="#F4900C"/>
+                                                    <path d="M27.394 23.957C27.542 27.041 24.833 28.25 23.375 27.666C21.269 26.823 21.834 25.375 21.292 22.375C20.75 19.375 18.667 17.292 15.584 16.375C17.834 22.708 14.337 25.042 12.504 25.459C10.632 25.885 8.751 25.458 8.536 21.452C6.352 23.626 5 26.634 5 29.958C5 30.326 5.023 30.688 5.055 31.048C8.125 34.082 12.342 35.958 17 35.958C21.658 35.958 25.875 34.082 28.945 31.048C28.977 30.688 29 30.326 29 29.958C29 27.771 28.416 25.722 27.394 23.957Z"
+                                                          fill="#FFCC4D"/>
+                                                </svg>
+                                            </span>
+                                            <span class="text">现在购买节省<b>&yen;<span id="jiesheng">{$goods.jiesheng}</span></b></span>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    <div class="prod-offering__prices">
+                                        <span class="sale-price">&yen; <span id="sale-price">{$goods.init_price}</span></span>
+                                        <span class="reg-price">&yen; <span id="reg-price">{$goods.crossed_price}</span></span>
+                                    </div>
+                                    <div class="prod-offering__rating">
+                                        <span class="rating"></span>
+                                    </div>
+                                    <div action="#" class="form" style="margin-bottom: 15px;">
+
+                                        <!--<div class="form-group">
+                                            <input class="form-control" type="text" placeholder="优惠券" id="coupon-input">
+                                            <small class="form-hint">没有优惠券？您可以<a href="#">点击链接前往优惠券领取页面</a></small>
+                                        </div>-->
+                                        {if condition="$goods.attach"}
+                                        <div class="subscribe-tos" style="margin-bottom: 5px;">
+                                            <span><font style="vertical-align: inherit;">下单必要信息：</font></span>
+                                        </div>
+                                        {volist name="$goods.attach" id="vo"}
+                                        <div class="form-group" style="margin-bottom: 8px;">
+                                            <input class="form-control attach-input" data-title="{$vo.title}" name="attach[]" type="text" placeholder="{$vo.placeholder|default=$vo.title}">
+                                        </div>
+                                        {/volist}
+                                        {/if}
+                                        {if condition="!$user"}
+                                            {if condition="in_array('mobile', $options.buy_input)"}
+                                            <div class="form-group" style="margin-bottom: 5px;">
+                                                <div class="subscribe-tos" style="margin-bottom: 5px; margin-top: 20px;">
+                                                    <span><font style="vertical-align: inherit;">手机号码：</font></span>
+                                                </div>
+                                                <div>
+                                                    <input id="mobile" class="form-control" type="text" placeholder="请输入您的手机号码">
+                                                </div>
+                                            </div>
+                                            {/if}
+                                            {if condition="in_array('email', $options.buy_input)"}
+                                            <div class="form-group" style="margin-bottom: 5px;">
+                                                <div class="subscribe-tos" style="margin-bottom: 5px; margin-top: 20px;">
+                                                    <span><font style="vertical-align: inherit;">电子邮箱：</font></span>
+                                                </div>
+                                                <div>
+                                                    <input id="email" class="form-control" type="email" placeholder="请输入您的邮箱地址">
+                                                </div>
+                                            </div>
+                                            {/if}
+                                            {if condition="in_array('password', $options.buy_input)"}
+                                            <div class="form-group" style="margin-bottom: 5px; ">
+                                                <div class="subscribe-tos" style="margin-top: 20px; margin-bottom: 5px;">
+                                                    <span><font style="vertical-align: inherit;">查单密码：</font></span>
+                                                </div>
+                                                <div>
+                                                    <input id="password" class="form-control" type="text" placeholder="请输入查单密码">
+
+                                                </div>
+                                            </div>
+                                            {/if}
+                                            <small class="form-hint">游客购买后，查询订单信息需要用到{if condition="in_array('mobile', $options.buy_input)"} 手机号码 {/if}{if condition="in_array('email', $options.buy_input)"} 电子邮箱 {/if}{if condition="in_array('password', $options.buy_input)"} 查单密码 {/if}。登录用户无需填写此项</small>
+                                        {/if}
+                                    </div>
+                                    <div class="prod-offering__cart-btn">
+                                        <button id="buy-btn" data-goods-id="{$goods.id}" class="btn btn-primary btn-icon btn-lg btn-block" {eq name="$goods.init_stock" value="0"}disabled{/eq}>
+                                                <span class="icon">
+                                                    <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                         class="feather feather-shopping-cart">
+                                                        <circle cx="9" cy="21" r="1"></circle>
+                                                        <circle cx="20" cy="21" r="1"></circle>
+                                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                                    </svg>
+                                                </span>
+                                            <span class="text" id="buy-btn-text">{:$goods.init_stock == 0 ? '已售磐' : '立即购买'}</span>
+                                        </button>
+                                    </div>
+                                    <div class="prod-offering__delivinfo mobile-hidden">
+                                        <div class="delivinfo__header">销售信息</div>
+                                        <div class="delivinfo__body">
+                                            {if condition="$template_config.stock"}
+                                            <div class="delivinfo__item">
+                                                <span class="icon">
+                                                    <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                         stroke-width="2" stroke-linecap="round"
+                                                         stroke-linejoin="round"
+                                                         class="feather feather-check-circle">
+                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                                    </svg>
+                                                </span>
+                                                <span class="text"><b>库存剩余</b><span id="init-stock" class="init-stock">{$goods.init_stock}</span></span>
+                                            </div>
+                                            {/if}
+                                            {if condition="$template_config.sales"}
+                                            <div class="delivinfo__item">
+                                                <span class="icon">
+                                                    <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                         stroke-width="2" stroke-linecap="round"
+                                                         stroke-linejoin="round" class="feather feather-truck">
+                                                        <rect x="1" y="3" width="15" height="13"></rect>
+                                                        <polygon
+                                                                points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                                    </svg>
+                                                </span>
+                                                <span class="text"><b>总销量</b><span>{:$goods.invented_sales ? $goods.invented_sales : $goods.sales}</span></span>
+                                            </div>
+                                            {/if}
+                                            <div class="delivinfo__item">
+                                                <span class="icon">
+                                                    <svg xmlns="https://www.w3.org/2000/svg" width="24" height="24"
+                                                         viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                         stroke-width="2" stroke-linecap="round"
+                                                         stroke-linejoin="round" class="feather feather-map-pin">
+                                                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                                        <circle cx="12" cy="10" r="3"></circle>
+                                                    </svg>
+                                                </span>
+                                                <span class="text"><b>发货方式</b><span>{:$goods.type == 'alone' || $goods.type == 'fixed' ? '自动发货' : '手动发货'}</span></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="prod-offering__merchant">
+                                        <div class="precheck-bonuses">
+                                            <span class="icon">
+                                                <svg width="36" height="35" viewBox="0 0 36 35" fill="none"
+                                                     xmlns="https://www.w3.org/2000/svg">
+                                                    <path d="M33 31C33 33.2 31.2 35 29 35H7C4.8 35 3 33.2 3 31V14C3 11.8 4.8 10 7 10H29C31.2 10 33 11.8 33 14V31Z"
+                                                          fill="#FDD888"/>
+                                                    <path d="M36 11C36 13.2 34.2 15 32 15H4C1.8 15 0 13.2 0 11C0 8.8 1.8 7 4 7H32C34.2 7 36 8.8 36 11Z"
+                                                          fill="#FDD888"/>
+                                                    <path d="M3 15H33V17H3V15Z" fill="#FCAB40"/>
+                                                    <path d="M19 3H17C15.343 3 14 4.343 14 6V35H22V6C22 4.344 20.657 3 19 3Z"
+                                                          fill="#DA2F47"/>
+                                                    <path d="M16 7C17.1 7 17.263 6.484 16.361 5.853L9.639 1.147C8.737 0.516 7.554 0.781 7.008 1.736L4.992 5.264C4.446 6.219 4.9 7 6 7H16ZM20 7C18.9 7 18.737 6.484 19.639 5.853L26.362 1.147C27.263 0.516 28.447 0.781 28.993 1.736L31.009 5.263C31.554 6.219 31.1 7 30 7H20Z"
+                                                          fill="#DA2F47"/>
+                                                </svg>
+                                            </span>
+                                            <span class="text">遇到任何问题，请及时联系网站客服</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pc-hidden">
+                    <div class="col-lg-9 col-xs-12" style="margin-bottom: 20px;">
+                        <div class="col-12">
+                            <div class="panel panel-default shadow" style="margin-top: 20px;">
+                                <div class="panel-heading">
+                                    <h4><i class="fa fa-fw fa-css3"></i>商品描述</h4>
+                                </div>
+                                <div class="panel-body goods-detail" style="white-space:normal; word-break:break-all; padding: 0;">{$goods.detail}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
+{/block}
+{block name="footjs"}
+<script>
+    $('#buy-btn').click(function(){
+        var data = {
+            goods_id: $(this).data('goods-id'), //商品ID
+            num: $('#buy-num').val(), //购买数量
+            sku_id: $('#buy-specs .active').data('sku-id'), //规格
+            pay_type: $('#pay-type .active').data('pay-type'), //支付方式
+            attach: [], //附加选项
+            coupon: $('#coupon-input').val(), //优惠券
+            mobile: $('#mobile').val(), //手机号码
+            email: $('#email').val(), //邮箱
+            password: $('#password').val(), //查单密码
+            test: $('#test').val()
+        };
+        $('.attach-input').each(function(){
+            data.attach.push({title: $(this).data('title'), value: $(this).val()});
+        });
+        layer.load();
+        // console.log(data)
+        $.post("/pay/goods", data, function(e){
+            layer.closeAll();
+            if(e.code == 200){
+                if(e.mode == 'form'){
+                    location.href = "/submit.html?data=" + e.data;
+                }
+                if(e.mode == 'scan'){
+                    location.href = "/scan.html?data=" + e.data;
+                }
+                if(e.mode == 'jump'){
+                    location.href = e.url;
+                }
+            }
+            if(e.code == 201){
+                toastr.success('购买成功');
+                location.href = e.data.url;
+            }
+            if(e.code == 400){
+                toastr.error(e.msg);
+                layer.closeAll();
+                return;
+            }
+        }).fail(function(e){
+            layer.closeAll();
+            toastr.error('请求失败');
+        });
+    });
+
+
+    function subForm( url, params, target){
+        var tempform = document.createElement("form");
+        tempform.action = url;
+        tempform.method = "post";
+        tempform.style.display="none"
+        if(target) {
+            tempform.target = target;
+        }
+        for (var x in params) {
+            var opt = document.createElement("input");
+            opt.name = x;
+            opt.value = params[x];
+            tempform.appendChild(opt);
+        }
+        var opt = document.createElement("input");
+        opt.type = "submit";
+        tempform.appendChild(opt);
+        document.body.appendChild(tempform);
+        tempform.submit();
+        document.body.removeChild(tempform);
+    }
+
+    $('.pay-type').click(function(){
+        if($(this).hasClass('disabled')){
+            toastr.error('未登录用户无法使用余额支付');
+            return false;
+        }
+        var pay_type = $(this).data('pay-type');
+        $('.pay-type').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    $('.select-specs').click(function(){
+        if($(this).hasClass('disabled')){
+            // Toastr.error('库存不足');
+            return false;
+        }
+        $('#buy-num').val(1);
+        var price = $(this).data('price');
+        if(price > 0) {
+            $('#pay-type-box').show();
+        }else{
+            $('#pay-type-box').hide();
+        }
+        var crossed_price = $(this).data('crossed');
+        $('.select-specs').removeClass('active');
+        $(this).addClass('active');
+        $('#sale-price').html(price);
+        $('#reg-price').html(crossed_price);
+        $('#jiesheng').html((crossed_price - price).toFixed(2));
+        $('.init-stock').html($(this).data('stock'));
+        $('#buy-btn').removeAttr('disabled');
+        $('#buy-btn-text').html('立即购买');
+    });
+
+    $(document).on('click', '[data-qty-control]', function(event) {
+        event.preventDefault();
+        let stock = $('.init-stock').html();
+
+        var qty_num = Number($('#buy-num').val());
+        var qty_dir = $(this).data("qty-control");
+        if (qty_dir == "plus") {
+            if(qty_num >= stock){
+                qty_num = stock;
+            }else{
+                qty_num += 1;
+            }
+
+        }else{
+            qty_num = (qty_num <= 1) ? 1 : (qty_num -= 1);
+        }
+        $('#buy-num').val(qty_num);
+    });
+</script>
+
+
+<!-- 弹窗 -->
+<script>
+    (function($) {
+        $.fn.extend({
+            leanModal: function(options) {
+                var defaults = {
+                    top: 100,
+                    overlay: 0.5,
+                    closeButton: null
+                };
+                var overlay = $("<div id='lean_overlay'></div>");
+                $("body").append(overlay);
+                options = $.extend(defaults, options);
+                return this.each(function() {
+                    var o = options;
+                    $(this).click(function(e) {
+                        var modal_id = $(this).attr("href");
+                        $("#lean_overlay").click(function() {
+                            close_modal(modal_id)
+                        });
+                        $(o.closeButton).click(function() {
+                            close_modal(modal_id)
+                        });
+                        var modal_height = $(modal_id).outerHeight();
+                        var modal_width = $(modal_id).outerWidth();
+                        $("#lean_overlay").css({
+                            "display": "block",
+                            opacity: 0
+                        });
+                        $("#lean_overlay").fadeTo(200, o.overlay);
+                        $(modal_id).css({
+                            "display": "block",
+                            "position": "fixed",
+                            "opacity": 0,
+                            "z-index": 11000,
+                            "left": 50 + "%",
+                            "margin-left": -(modal_width / 2) + "px",
+                            "top": o.top + "px"
+                        });
+                        $(modal_id).fadeTo(200, 1);
+                        e.preventDefault()
+                    })
+                });
+                function close_modal(modal_id) {
+                    $("#lean_overlay").fadeOut(200);
+                    $(modal_id).css({
+                        "display": "none"
+                    })
+                }
+            }
+        })
+    })(jQuery);
+</script>
+
+<style>
+
+    #lean_overlay {
+        position: fixed;
+        z-index: 10000;
+        top: 0px;
+        left: 0px;
+        height:100%;
+        width:100%;
+        background: #000;
+        display: none;
+    }
+    #alert-html{
+        background: #fff;
+        display: none;
+        position: fixed;
+        opacity: 1;
+        z-index: 11000;
+        left: 50%;
+        width: 800px;
+        top: 10%!important;
+        height: auto;
+        border-radius: 6px;
+    }
+    #alert-html .content img{
+        max-width: 100%;
+    }
+    #alert-html .content{
+        min-height: unset;
+        word-break: break-all;
+    }
+
+    @media screen and (max-width: 700px) {
+
+        /* 在这里写CSS样式，当屏幕宽度小于700px时生效 */
+        #alert-html{
+            background: #fff;
+            display: none;
+            position: fixed;
+            opacity: 1;
+            z-index: 11000;
+            left: 50%;
+            max-width: 96%;
+            top: 10%!important;
+            border-radius: 6px;
+        }
+    }
+
+
+    .modal_close{
+        text-align: center;
+        background: #495057;
+        color: #fff;
+        padding: 14px;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
+        cursor: pointer;
+    }
+
+
+</style>
+<div id="alert-html">
+    <div class="content" style="padding: 15px 25px; overflow: auto;">{$goods['pop_content']}</div>
+
+    <div class="modal_close" href="#">关闭</div>
+</div>
+
+<script>
+
+    var bodyHeight = document.body.clientHeight;
+    var alertHeight = bodyHeight - bodyHeight * 0.3;
+    $('#alert-html > .content').css('max-height', alertHeight + 'px');
+</script>
+
+<a id="alert-btn" rel="alertModal" name="signup" href="#alert-html"></a>
+{if condition="!empty($goods.pop_content)"}
+<script>
+    $('a[rel*=alertModal]').leanModal({ top : 200, closeButton: ".modal_close" });
+    $('#alert-btn').click()
+</script>
+{/if}
+{:doAction('goodsFoot')}
+{/block}
