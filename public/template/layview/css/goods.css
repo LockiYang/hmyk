@@ -1,21 +1,3 @@
-.no-stock {
-  text-align: center;
-  border: initial;
-  color: #fff;
-  display: inline-block;
-  width: 170px;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 45px;
-  border-radius: 100px;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  box-shadow: 0 5px 6px 0 rgb(73 105 230 / 22%);
-  background-image: linear-gradient(135deg, #656565 10%, #c1c1c1 100%);
-}
 .btn {
   border: 1px solid transparent;
   line-height: 1.5;
@@ -43,14 +25,14 @@
   border-left: none;
   border-right: none;
 }
+.order-number-box {
+  display: inline-block;
+}
 .input-group-prepend,
 .input-group-append {
   display: inline-block;
   float: left;
   font-size: 24px;
-}
-.order-number-box {
-  display: inline-block;
 }
 .add .btn {
   border-bottom-left-radius: 0;
@@ -76,25 +58,18 @@
   /* color: #fff; */
 }
 .pay-box {
-  margin: 10px 20px 0 20px;
+  margin-bottom: 10px;
 }
 .pay-box .pay-box-title {
   color: #999;
-  padding: 5px 0;
+  padding-bottom: 10px;
 }
-/* .mainx {
-  margin-top: 20px;
-} */
-
-.card {
-  margin-top: 20px;
-}
-.card .card-box {
+.card-box {
+  margin: 7.5px;
   background: #fff;
   box-shadow: 0 7px 29px 0 rgb(18 52 91 / 11%);
   border-radius: 6px;
-  padding-top: 14px;
-  padding-bottom: 13px;
+  /* padding: 15px; */
 }
 .card-box:after {
   /*伪元素是行内元素 正常浏览器清除浮动方法*/
@@ -105,20 +80,75 @@
   visibility: hidden;
 }
 .card-box .goods-img {
-  margin-left: 20px;
-  margin-right: 10px;
-  margin-top: 10px;
-  width: calc(100% - 30px);
-  height: 0;
-  position: relative;
-  padding-bottom: calc(100% - 40px);
-}
-.card-box .goods-img img {
-  width: calc(100% - 10px);
+  width: 100%;
+  height: auto;
+  display: block;
+  box-sizing: border-box;
   box-shadow: 0 5px 6px 0 rgb(204 187 187 / 22%);
   border-radius: 7px;
-  margin-top: 5px;
-  height: 100%;
-  position: absolute;
-  object-fit: cover;
+}
+.card-box .card-title {
+  display: flex;
+  align-items: center;
+  margin: 0 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+.card-box .card-title .txt {
+  font-size: 18px;
+  margin-left: 5px;
+}
+.goods-img-cover {
+  padding: 15px;
+}
+.goods-info {
+  padding: 15px;
+}
+.goods-info .goods-name-box {
+  font-size: 20px;
+  line-height: 150%;
+  margin-bottom: 15px;
+}
+.goods-info .price-box {
+  margin-bottom: 15px;
+}
+.buy-num-box {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.buy-num-box .prefix {
+  color: #999;
+  margin-right: 10px;
+}
+.nologin-info-box .tips {
+  color: #999;
+  padding: 5px 0;
+}
+.nologin-info-item {
+  margin-top: 20px;
+}
+.nologin-info-item .title {
+  color: #999;
+  margin-bottom: 10px;
+}
+.buy-btn-box {
+  margin: 20px 0;
+}
+.goods-detail .detail {
+  padding: 15px;
+}
+.no-mt {
+  margin-top: 0;
+}
+.layui-input, .layui-textarea {
+  width: 50%;
+}
+@media (max-width: 992px) {
+  .goods-info {
+    padding-top: 0;
+  }
+  .layui-input, .layui-textarea {
+    width: 100%;
+  }
 }

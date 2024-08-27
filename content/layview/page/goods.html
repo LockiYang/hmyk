@@ -5,36 +5,31 @@
 {/block}
 
 {block name="content"}
-    <div class="card">
-        <div class="layui-row">
-            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
-                <div class="card-box goods-detail">
-                    <div class="layui-col-md4 layui-col-sm12">
-                        <div class="goods-img">
-                            <img class="viewer-pictures" src="{$goods.cover}" onerror="javascript:this.src='/assets/img/none.jpg';" alt="">
+    <div class="layui-row">
+        <div class="layui-col-xl8 layui-col-xl-offset2 layui-col-md10 layui-col-md-offset1 layui-col-sm12">
+            <div class="card-box goods-detail">
+                <div class="layui-col-md4 layui-col-sm12 goods-img-cover">
+                    <img class="goods-img" src="{$goods.cover}" onerror="javascript:this.src='/assets/img/none.jpg';" alt="">
+                </div>
+                <div class="layui-col-md8 layui-col-sm12 goods-info">
+                    <div class="">
+                        <div class="goods-name-box">
+                            {$goods.name}
+                            <!-- {if condition="$template_config.stock"}
+                            <div class="small-tips tips-blue">库存 {$goods.init_stock}</div>
+                            {/if}
+                            {if condition="$template_config.sales"}
+                            <div class="small-tips tips-green">销量 {:$goods.invented_sales ? $goods.invented_sales : $goods.sales}</div>
+                            {/if} -->
                         </div>
-                    </div>
-                    <div class="layui-col-md8 layui-col-sm12">
-                        <div class="goods-msg">
-                            <div class="goods-name">
-                                <embed class="svg" style="vertical-align: middle;"
-                                    src="https://apple.id591.com/content/template/default/svg/spmc.svg" type="image/svg+xml" />
-                                <span>
-                                    {$goods.name}
-                                    {if condition="$template_config.stock"}
-                                    <span class="small-tips tips-blue">库存 <span class="init-stock">{$goods.init_stock}</span></span>
-                                    {/if}
-                                    {if condition="$template_config.sales"}
-                                    <span class="small-tips tips-green">销量 {:$goods.invented_sales ? $goods.invented_sales : $goods.sales}</span>
-                                    {/if}
-                                </span>
-                            </div>
-                            <div class="price">
-                                <span class="price-sign">￥</span>
-                                <span class="price-num">{$goods.init_price}</span>
-                            </div>
+                        <div class="price-box price">
+                            <span class="price-sign">￥</span>
+                            <span class="price-num">{$goods.init_price}</span>
+                        </div>
 
-                            <div class="entry notSelection">
+                        <div class="buy-num-box">
+                            <div class="prefix">购买数量：</div>
+                            <div class="notSelection">
                                 <div class="input-group order-number-box">
                                     <div class="input-group-prepend sub">
                                         <button class="btn btn-decrement btn-outline-secondary" data-qty-control="minus" type="button">-</button>
@@ -46,87 +41,81 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- 处理支付选择 -->
-                        <div class="pay-box" id="pay-type">
-                            <div class="pay-box-title">选择支付方式</div>
-                            {volist name="pay_list" id="vo"}
-                            <span class="pay-type btn {eq name='key' value='0'}active{/eq}" data-pay-type="{$vo.value}" style="    padding: 5px 16px;">
-                                {if condition="$vo.value == 'alipay'"}
-                                <span style="float: left;">
-                                    <svg style="width: 20px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" t="1647878023515" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="2739" width="25" height="25"><defs><style type="text/css">@font-face { font-family: feedback-iconfont; src: url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff2?t=1630033759944") format("woff2"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff?t=1630033759944") format("woff"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.ttf?t=1630033759944") format("truetype"); }</style></defs><path d="M1023.795 853.64v6.348a163.807 163.807 0 0 1-163.807 163.807h-696.18A163.807 163.807 0 0 1 0 859.988v-696.18A163.807 163.807 0 0 1 163.807 0h696.181a163.807 163.807 0 0 1 163.807 163.807V853.64z" fill="#009FE9" p-id="2740"/><path d="M844.836 648.267c-40.952-14.333-95.623-34.809-156.846-57.128a949.058 949.058 0 0 0 90.094-222.573H573.325V307.14h245.711v-43.41l-245.71 2.458V143.33H472.173c-18.223 0-21.704 20.476-21.704 20.476v102.38H204.759v40.952h245.71v61.427H245.712v40.952h409.518a805.522 805.522 0 0 1-64.909 148.246c-128.384-42.795-266.186-77.604-354.233-55.08a213.564 213.564 0 0 0-112.003 63.27c-95.418 116.917-26.21 294.034 175.274 294.034 119.989 0 236.087-67.366 325.771-177.73 134.322 65.932 398.666 176.297 398.666 176.297V701.3s-32.352-4.095-178.96-53.033z m-563.702 144.97c-158.893 0-204.759-124.699-126.336-194.112a191.86 191.86 0 0 1 90.913-46.276c93.575-10.238 189.811 35.629 293.624 86.614-74.941 94.598-166.674 153.774-258.2 153.774z" fill="#FFFFFF" p-id="2741"/></svg>
-                                </span>
-                                {/if}
-                                {if condition="$vo.value == 'wxpay'"}
-                                <span style="float: left;">
-                                    <svg style="width: 20px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" t="1647877815295" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="1939" width="25" height="25"><defs><style type="text/css">@font-face { font-family: feedback-iconfont; src: url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff2?t=1630033759944") format("woff2"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff?t=1630033759944") format("woff"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.ttf?t=1630033759944") format("truetype"); }</style></defs><path d="M395.846 603.585c-3.921 1.98-7.936 2.925-12.81 2.925-10.9 0-19.791-5.85-24.764-14.625l-2.006-3.864-78.106-167.913c-0.956-1.98-0.956-3.865-0.956-5.845 0-7.83 5.928-13.68 13.863-13.68 2.965 0 5.928 0.944 8.893 2.924l91.965 64.43c6.884 3.864 14.82 6.79 23.708 6.79 4.972 0 9.85-0.945 14.822-2.926L861.71 282.479c-77.149-89.804-204.684-148.384-349.135-148.384-235.371 0-427.242 157.158-427.242 351.294 0 105.368 57.361 201.017 147.323 265.447 6.88 4.905 11.852 13.68 11.852 22.45 0 2.925-0.957 5.85-2.006 8.775-6.881 26.318-18.831 69.334-18.831 71.223-0.958 2.92-2.013 6.79-2.013 10.75 0 7.83 5.929 13.68 13.865 13.68 2.963 0 5.928-0.944 7.935-2.925l92.922-53.674c6.885-3.87 14.82-6.794 22.756-6.794 3.916 0 8.889 0.944 12.81 1.98 43.496 12.644 91.012 19.53 139.48 19.53 235.372 0 427.24-157.158 427.24-351.294 0-58.58-17.78-114.143-48.467-163.003l-491.39 280.07-2.963 1.98z" fill="#09BB07" p-id="1940"/></svg>
-                                </span>
-                                {/if}
-
-                                {if condition="$vo.value == 'qqpay'"}
-                                <span style="float: left;">
-                                    <svg class="icon" style="width: 20px; margin-top: 3px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10578"><path d="M512 0C229.224296 0 0 229.224296 0 512s229.224296 512 512 512 512-229.224296 512-512S794.775704 0 512 0zM801.261037 668.86163c-21.731556 18.640593-49.948444-61.345185-54.006519-49.038222-9.879704 29.923556-14.506667 49.929481-43.633778 82.507852-1.554963 1.744593 33.659259 14.468741 43.633778 41.642667 9.557333 26.017185 28.141037 67.26163-93.487407 80.213333-71.35763 7.585185-122.936889-38.020741-128.075852-37.584593-9.53837 0.83437-5.290667 0-15.530667 0-8.38163 0-8.931556 0.606815-16.820148 0-2.161778-0.170667-25.884444 37.584593-131.963259 37.584593-82.223407 0-103.518815-51.749926-86.983111-80.213333 16.535704-28.463407 44.126815-36.750222 40.239407-41.263407-19.152593-22.186667-32.350815-45.909333-40.239407-67.356444-1.953185-5.347556-3.584-10.543407-4.873481-15.530667-2.996148-11.45363-25.884444 67.204741-50.460444 49.038222-24.576-18.166519-22.376296-64.417185-6.46637-108.676741 16.042667-44.619852 56.471704-87.589926 56.926815-97.071407 1.611852-35.290074-3.489185-41.14963 0-50.422519 7.755852-20.764444 17.199407-12.8 17.199407-23.570963 0-135.736889 100.864-245.76 225.28-245.76s225.28 110.042074 225.28 245.76c0 5.195852 13.520593 0 19.986963 23.570963 1.327407 4.873481 2.23763 23.665778 0.663704 50.422519-0.739556 12.856889 34.266074 28.501333 52.375704 97.071407C828.434963 628.754963 810.30637 661.105778 801.261037 668.86163z" fill="#68A5E1" p-id="10579"></path></svg>
-                                </span>
-                                {/if}
-
-                                <span style="float: left; line-height: 26px; margin-left: 8px;">{$vo.name}</span>
+                    </div>
+                    <!-- 处理支付选择 -->
+                    <div class="pay-box" id="pay-type">
+                        <div class="pay-box-title">选择支付方式</div>
+                        {volist name="pay_list" id="vo"}
+                        <span class="pay-type btn {eq name='key' value='0'}active{/eq}" data-pay-type="{$vo.value}" style="    padding: 5px 16px;">
+                            {if condition="$vo.value == 'alipay'"}
+                            <span style="float: left;">
+                                <svg style="width: 20px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" t="1647878023515" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="2739" width="25" height="25"><defs><style type="text/css">@font-face { font-family: feedback-iconfont; src: url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff2?t=1630033759944") format("woff2"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff?t=1630033759944") format("woff"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.ttf?t=1630033759944") format("truetype"); }</style></defs><path d="M1023.795 853.64v6.348a163.807 163.807 0 0 1-163.807 163.807h-696.18A163.807 163.807 0 0 1 0 859.988v-696.18A163.807 163.807 0 0 1 163.807 0h696.181a163.807 163.807 0 0 1 163.807 163.807V853.64z" fill="#009FE9" p-id="2740"/><path d="M844.836 648.267c-40.952-14.333-95.623-34.809-156.846-57.128a949.058 949.058 0 0 0 90.094-222.573H573.325V307.14h245.711v-43.41l-245.71 2.458V143.33H472.173c-18.223 0-21.704 20.476-21.704 20.476v102.38H204.759v40.952h245.71v61.427H245.712v40.952h409.518a805.522 805.522 0 0 1-64.909 148.246c-128.384-42.795-266.186-77.604-354.233-55.08a213.564 213.564 0 0 0-112.003 63.27c-95.418 116.917-26.21 294.034 175.274 294.034 119.989 0 236.087-67.366 325.771-177.73 134.322 65.932 398.666 176.297 398.666 176.297V701.3s-32.352-4.095-178.96-53.033z m-563.702 144.97c-158.893 0-204.759-124.699-126.336-194.112a191.86 191.86 0 0 1 90.913-46.276c93.575-10.238 189.811 35.629 293.624 86.614-74.941 94.598-166.674 153.774-258.2 153.774z" fill="#FFFFFF" p-id="2741"/></svg>
                             </span>
-                            {/volist}
-                            {if condition="$user"}
-                                <span class="pay-type btn {if condition='!$user'}disabled{/if}" data-pay-type="balance">
-                                    <span style="float: left;">
-                                        <svg class="icon" style="width: 20px; margin-top: 3px; vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6985"><path d="M138.273033 277.445811c0-75.985159 62.187854-138.272994 138.272993-138.272993h594.38391c75.985159 0 138.272994 62.187854 138.272993 138.272993V858.032416c0 75.985159-62.187854 138.272994-138.272993 138.272993H276.546026c-75.985159 0-138.272994-62.187854-138.272993-138.272993V277.445811z m0 0" fill="#BAB2A5" p-id="6986"></path><path d="M1023.000234 143.371998C1023.000234 64.587385 956.613201 0.999805 876.428862 0.999805h-729.85745C66.387073 0.899824 0.000039 64.587385 0.000039 143.371998v709.161492c0 80.184339 66.387034 143.77192 146.571373 143.771919h729.85745c80.184339 0 146.571373-63.587581 146.571372-142.372193v-62.187854c0-8.298379-5.498926-13.797305-13.797305-13.797305s-13.797305 5.498926-13.797305 13.797305v62.187854c0 63.587581-53.889475 114.777583-118.876782 114.777583h-729.85745c-64.987307 0-118.876782-51.190002-118.876782-114.777583V143.371998c0-63.587581 53.889475-114.777583 118.876782-114.777583h729.85745c64.987307 0 118.876782 51.190002 118.876782 114.777583v62.187854c0 8.298379 5.498926 13.797305 13.797305 13.797305s13.797305-5.498926 13.797305-13.797305v-62.187854z m0 0" fill="#25232E" p-id="6987"></path><path d="M329.035774 512.399922c0 99.580551 80.184339 179.664909 179.664909 179.664909h511.500098V332.735013H508.800664c-99.580551 0-179.76489 80.184339-179.76489 179.664909z m663.570397 152.070299H508.800664c-84.283538 0-152.070299-67.78676-152.070299-152.070299s67.68678-152.070299 152.070299-152.070299h483.805507v304.140598z m0 0" fill="#25232E" p-id="6988"></path><path d="M445.213083 512.399922c0 36.592853 29.6942 66.387034 66.387034 66.387034 36.592853 0 66.387034-29.6942 66.387034-66.387034s-29.6942-66.387034-66.387034-66.387034c-36.692833 0.09998-66.387034 29.794181-66.387034 66.387034z m0 0" fill="#25232E" p-id="6989"></path></svg>
-                                    </span>
-                                    <span style="float: left; line-height: 26px; margin-left: 8px;">余额支付 &yen; {$user.money|default='0.00'}</span>
+                            {/if}
+                            {if condition="$vo.value == 'wxpay'"}
+                            <span style="float: left;">
+                                <svg style="width: 20px;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" t="1647877815295" class="icon" viewBox="0 0 1024 1024" version="1.1" p-id="1939" width="25" height="25"><defs><style type="text/css">@font-face { font-family: feedback-iconfont; src: url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff2?t=1630033759944") format("woff2"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.woff?t=1630033759944") format("woff"), url("//at.alicdn.com/t/font_1031158_u69w8yhxdu.ttf?t=1630033759944") format("truetype"); }</style></defs><path d="M395.846 603.585c-3.921 1.98-7.936 2.925-12.81 2.925-10.9 0-19.791-5.85-24.764-14.625l-2.006-3.864-78.106-167.913c-0.956-1.98-0.956-3.865-0.956-5.845 0-7.83 5.928-13.68 13.863-13.68 2.965 0 5.928 0.944 8.893 2.924l91.965 64.43c6.884 3.864 14.82 6.79 23.708 6.79 4.972 0 9.85-0.945 14.822-2.926L861.71 282.479c-77.149-89.804-204.684-148.384-349.135-148.384-235.371 0-427.242 157.158-427.242 351.294 0 105.368 57.361 201.017 147.323 265.447 6.88 4.905 11.852 13.68 11.852 22.45 0 2.925-0.957 5.85-2.006 8.775-6.881 26.318-18.831 69.334-18.831 71.223-0.958 2.92-2.013 6.79-2.013 10.75 0 7.83 5.929 13.68 13.865 13.68 2.963 0 5.928-0.944 7.935-2.925l92.922-53.674c6.885-3.87 14.82-6.794 22.756-6.794 3.916 0 8.889 0.944 12.81 1.98 43.496 12.644 91.012 19.53 139.48 19.53 235.372 0 427.24-157.158 427.24-351.294 0-58.58-17.78-114.143-48.467-163.003l-491.39 280.07-2.963 1.98z" fill="#09BB07" p-id="1940"/></svg>
+                            </span>
+                            {/if}
+
+                            {if condition="$vo.value == 'qqpay'"}
+                            <span style="float: left;">
+                                <svg class="icon" style="width: 20px; margin-top: 3px;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10578"><path d="M512 0C229.224296 0 0 229.224296 0 512s229.224296 512 512 512 512-229.224296 512-512S794.775704 0 512 0zM801.261037 668.86163c-21.731556 18.640593-49.948444-61.345185-54.006519-49.038222-9.879704 29.923556-14.506667 49.929481-43.633778 82.507852-1.554963 1.744593 33.659259 14.468741 43.633778 41.642667 9.557333 26.017185 28.141037 67.26163-93.487407 80.213333-71.35763 7.585185-122.936889-38.020741-128.075852-37.584593-9.53837 0.83437-5.290667 0-15.530667 0-8.38163 0-8.931556 0.606815-16.820148 0-2.161778-0.170667-25.884444 37.584593-131.963259 37.584593-82.223407 0-103.518815-51.749926-86.983111-80.213333 16.535704-28.463407 44.126815-36.750222 40.239407-41.263407-19.152593-22.186667-32.350815-45.909333-40.239407-67.356444-1.953185-5.347556-3.584-10.543407-4.873481-15.530667-2.996148-11.45363-25.884444 67.204741-50.460444 49.038222-24.576-18.166519-22.376296-64.417185-6.46637-108.676741 16.042667-44.619852 56.471704-87.589926 56.926815-97.071407 1.611852-35.290074-3.489185-41.14963 0-50.422519 7.755852-20.764444 17.199407-12.8 17.199407-23.570963 0-135.736889 100.864-245.76 225.28-245.76s225.28 110.042074 225.28 245.76c0 5.195852 13.520593 0 19.986963 23.570963 1.327407 4.873481 2.23763 23.665778 0.663704 50.422519-0.739556 12.856889 34.266074 28.501333 52.375704 97.071407C828.434963 628.754963 810.30637 661.105778 801.261037 668.86163z" fill="#68A5E1" p-id="10579"></path></svg>
+                            </span>
+                            {/if}
+
+                            <span style="float: left; line-height: 26px; margin-left: 8px;">{$vo.name}</span>
+                        </span>
+                        {/volist}
+                        {if condition="$user"}
+                            <span class="pay-type btn {if condition='!$user'}disabled{/if}" data-pay-type="balance">
+                                <span style="float: left;">
+                                    <svg class="icon" style="width: 20px; margin-top: 3px; vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6985"><path d="M138.273033 277.445811c0-75.985159 62.187854-138.272994 138.272993-138.272993h594.38391c75.985159 0 138.272994 62.187854 138.272993 138.272993V858.032416c0 75.985159-62.187854 138.272994-138.272993 138.272993H276.546026c-75.985159 0-138.272994-62.187854-138.272993-138.272993V277.445811z m0 0" fill="#BAB2A5" p-id="6986"></path><path d="M1023.000234 143.371998C1023.000234 64.587385 956.613201 0.999805 876.428862 0.999805h-729.85745C66.387073 0.899824 0.000039 64.587385 0.000039 143.371998v709.161492c0 80.184339 66.387034 143.77192 146.571373 143.771919h729.85745c80.184339 0 146.571373-63.587581 146.571372-142.372193v-62.187854c0-8.298379-5.498926-13.797305-13.797305-13.797305s-13.797305 5.498926-13.797305 13.797305v62.187854c0 63.587581-53.889475 114.777583-118.876782 114.777583h-729.85745c-64.987307 0-118.876782-51.190002-118.876782-114.777583V143.371998c0-63.587581 53.889475-114.777583 118.876782-114.777583h729.85745c64.987307 0 118.876782 51.190002 118.876782 114.777583v62.187854c0 8.298379 5.498926 13.797305 13.797305 13.797305s13.797305-5.498926 13.797305-13.797305v-62.187854z m0 0" fill="#25232E" p-id="6987"></path><path d="M329.035774 512.399922c0 99.580551 80.184339 179.664909 179.664909 179.664909h511.500098V332.735013H508.800664c-99.580551 0-179.76489 80.184339-179.76489 179.664909z m663.570397 152.070299H508.800664c-84.283538 0-152.070299-67.78676-152.070299-152.070299s67.68678-152.070299 152.070299-152.070299h483.805507v304.140598z m0 0" fill="#25232E" p-id="6988"></path><path d="M445.213083 512.399922c0 36.592853 29.6942 66.387034 66.387034 66.387034 36.592853 0 66.387034-29.6942 66.387034-66.387034s-29.6942-66.387034-66.387034-66.387034c-36.692833 0.09998-66.387034 29.794181-66.387034 66.387034z m0 0" fill="#25232E" p-id="6989"></path></svg>
                                 </span>
-                            {/if}
-                        </div>
-                        <!-- 处理未登录用户购买 -->
-                        {if condition="!$user"}
-                            {if condition="in_array('mobile', $options.buy_input)"}
-                            <div class="entry">
-                                <span class="l-msg">手机号码</span>
-                                <label class="input">
-                                    <input type="text" id="mobile" placeholder="请输入您的手机号码" />
-                                </label>
-                            </div>
-                            {/if}
-                            {if condition="in_array('email', $options.buy_input)"}
-                            <div class="entry">
-                                <span class="l-msg">电子邮箱</span>
-                                <label class="input">
-                                    <input type="text" id="email" placeholder="请输入您的邮箱地址" />
-                                </label>
-                            </div>
-                            {/if}
-                            {if condition="in_array('password', $options.buy_input)"}
-                            <div class="entry">
-                                <span class="l-msg">查单密码：</span>
-                                <label class="input">
-                                    <input type="text" id="password" placeholder="请输入查单密码" />
-                                </label>
-                            </div>
-                            {/if}
-                            <small class="form-hint">游客购买后，查询订单信息需要用到{if condition="in_array('mobile', $options.buy_input)"} 手机号码 {/if}{if condition="in_array('email', $options.buy_input)"} 电子邮箱 {/if}{if condition="in_array('password', $options.buy_input)"} 查单密码 {/if}。登录用户无需填写此项</small>
+                                <span style="float: left; line-height: 26px; margin-left: 8px;">余额支付 &yen; {$user.money|default='0.00'}</span>
+                            </span>
                         {/if}
-                        <div class="layui-col-sm6 buy btn">
-                            <button id="to_pay_btn" data-goods-id="{$goods.id}" type="submit"><span>立即下单</span></button>
+                    </div>
+                    <!-- 处理未登录用户购买 -->
+                    {if condition="!$user"}
+                    <div class="nologin-info-box">
+                        {if condition="in_array('mobile', $options.buy_input)"}
+                        <div class="nologin-info-item">
+                            <div class="title">手机号码</div>
+                            <input id="mobile" type="text" name="" placeholder="请输入您的手机号码" class="layui-input">
                         </div>
+                        {/if}
+                        {if condition="in_array('email', $options.buy_input)"}
+                        <div class="nologin-info-item">
+                            <div class="title">电子邮箱</div>
+                            <input id="email" type="text" name="" placeholder="请输入您的邮箱地址" class="layui-input">
+                        </div>
+                        {/if}
+                        {if condition="in_array('password', $options.buy_input)"}
+                        <div class="nologin-info-item">
+                            <div class="title">查单密码</div>
+                            <input id="password" type="text" name="" placeholder="请输入查单密码" class="layui-input">
+                        </div>
+                        {/if}
+                        <div class="tips">游客购买后，查询订单信息需要用到{if condition="in_array('mobile', $options.buy_input)"} 手机号码 {/if}{if condition="in_array('email', $options.buy_input)"} 电子邮箱 {/if}{if condition="in_array('password', $options.buy_input)"} 查单密码 {/if}。登录用户无需填写此项</div>
+                    </div>
+                    {/if}
+                    <div class="layui-col-sm12 layui-col-md6 buy-btn-box">
+                        <button id="to_pay_btn" data-goods-id="{$goods.id}" type="submit" class="layui-btn layui-btn-normal layui-btn-fluid">立即下单</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="card">
-        <div class="layui-row">
-            <div class="layui-col-md8 layui-col-md-offset2 layui-col-sm12">
-                <div class="card-box goods-detail">
-                    <div class="title" style="border-bottom: 1px solid #f7f7f7;padding-bottom: 5px">
-                        <embed class="svg" src="https://apple.id591.com/content/template/default/svg/spjs.svg" type="image/svg+xml" />
-                        <span>商品描述</span>
-                    </div>
-                    <div class="intro">
-                        {$goods.detail}
-                    </div>
+    <div class="layui-row">
+        <div class="layui-col-xl8 layui-col-xl-offset2 layui-col-md10 layui-col-md-offset1 layui-col-sm12">
+            <div class="card-box goods-detail no-mt">
+                <div class="card-title">
+                    <i class="layui-icon layui-icon-flag" style="font-size: 20px;"></i>
+                    <div class="txt">商品描述</div>
+                </div>
+                <div class="detail">
+                    {$goods.detail}
                 </div>
             </div>
         </div>

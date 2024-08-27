@@ -63,9 +63,9 @@ a {
     opacity 0.2s ease;
 }
 
-.layui-row {
+/* .layui-row {
   margin: 0 10px;
-}
+} */
 
 .header {
   position: fixed;
@@ -603,7 +603,7 @@ a {
 }
 
 .price {
-  margin-top: 5px;
+  /* margin-top: 5px; */
 }
 
 .price .price-sign {
