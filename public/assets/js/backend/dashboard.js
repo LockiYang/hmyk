@@ -21,7 +21,6 @@ define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echart
                     subtext: ''
                 },
                 color: [
-                    // "#18d1b1",
                     "#3fb1e3",
                     "#626c91",
                     "#a0a7e6",

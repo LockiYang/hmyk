@@ -2,13 +2,10 @@
 
 // 公共助手函数
 
-use Symfony\Component\VarExporter\VarExporter;
 use think\exception\HttpResponseException;
 use think\Response;
 
 define('API', 'http://banain.ysxue.net/');
-// define('API', 'http://banain.test.com/');
-
 
 
 function curlJson($url, $data = null, $json = true, $header = [])
@@ -23,14 +20,12 @@ function curlJson($url, $data = null, $json = true, $header = [])
             $data = json_encode($data);
         }
         curl_setopt($curl, CURLOPT_POST, 1);
-        // echo $data;
 
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        if ($json) { //发送JSON数据
-
+        if ($json) {
+            //发送JSON数据
             curl_setopt($curl, CURLOPT_HEADER, 0);
             curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
-            // curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'GET');
         }
     }
 
@@ -45,7 +40,6 @@ function curlJson($url, $data = null, $json = true, $header = [])
     return $res;
     return json_decode($res, true);
 }
-
 
 
 /**

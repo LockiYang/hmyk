@@ -710,7 +710,7 @@ INSERT INTO `hm_options` VALUES (9, 'logo', '/template/default/images/dist/logo-
 INSERT INTO `hm_options` VALUES (10, 'active_plugin', 'a:1:{i:0;s:4:\"scan\";}', '启用的插件');
 INSERT INTO `hm_options` VALUES (11, 'beian', '', '备案号');
 INSERT INTO `hm_options` VALUES (12, 'icon', '/assets/img/favicon.png', 'icon');
-INSERT INTO `hm_options` VALUES (13, 'custom_code', '<script>\r\nconsole.log(\'红盟云卡下载地址：https://blog.ysxue.net/\');\r\n</script>', '自定义代码');
+INSERT INTO `hm_options` VALUES (13, 'custom_code', '<script>\r\nconsole.log(\'custom code here\');\r\n</script>', '自定义代码');
 INSERT INTO `hm_options` VALUES (14, 'buy_input', 'a:1:{i:0;s:5:\"email\";}', '游客下单必填项');
 INSERT INTO `hm_options` VALUES (15, 'corporate_name', '公司名称', '公司名称');
 INSERT INTO `hm_options` VALUES (16, 'register', 'open', '注册功能');
