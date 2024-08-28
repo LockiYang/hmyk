@@ -13,39 +13,42 @@ use think\exception\ValidateException;
  *
  * @icon fa fa-circle-o
  */
-class Goods extends Backend {
+class Goods extends Backend
+{
 
     protected $searchFields = ['name'];
+    protected $multiFields = 'shelf';
     /**
      * Goods模型对象
      * @var \app\admin\model\goods\Goods
      */
     protected $model = null;
 
-    public function _initialize() {
+    public function _initialize()
+    {
         parent::_initialize();
         $this->model = new \app\admin\model\goods\Goods;
         $this->category_model = new \app\admin\model\goods\Category;
         $tree = Tree::instance();
         $tree->init(collection($this->category_model->order('weigh desc,id desc')->select())->toArray(), 'pid');
         $categorylist = $tree->getTreeList($tree->getTreeArray(0), 'name');
-		$categorydata = [0 => ['id' => null, 'name' => __('请选择商品类目')]];
+        $categorydata = [0 => ['id' => null, 'name' => __('请选择商品类目')]];
         foreach ($categorylist as $k => $v) {
             $categorydata[$v['id']] = $v;
         }
 
         $user_agency = Db::name('user_agency')->field('id, name')->whereNull('deletetime')->order('weigh desc')->select();
         $this->assign([
-			'user_agency' => $user_agency, //代理等级
+            'user_agency' => $user_agency, //代理等级
             'category' => $categorydata, //商品分类
         ]);
-
     }
 
     /**
      * 处理附加选项
      */
-    public function clAttach($attach){
+    public function clAttach($attach)
+    {
         if (empty($attach)) {
             $attach = json_encode([]);
         } else {
@@ -62,7 +65,8 @@ class Goods extends Backend {
     /**
      * 处理批发优惠
      */
-    public function clWholesale($wholesale){
+    public function clWholesale($wholesale)
+    {
         if (empty($wholesale)) {
             $wholesale = json_encode([]);
         } else {
@@ -80,7 +84,8 @@ class Goods extends Backend {
     }
 
 
-    public function add() {
+    public function add()
+    {
         if (false === $this->request->isPost()) {
             return $this->view->fetch();
         }
@@ -105,14 +110,14 @@ class Goods extends Backend {
         }
 
         if ($params['is_sku'] == 1) { //处理多规格
-            if(empty($params['sku'])) $this->error('请设置规格属性');
+            if (empty($params['sku'])) $this->error('请设置规格属性');
             $params['sku'] = json_decode($params['sku'], true);
             foreach ($params['sku'] as $key => $val) {
                 if (empty($val['name'])) {
                     unset($params['sku'][$key]);
                 } else {
-                    foreach($val as $k => $v){
-                        if($k != 'name'){
+                    foreach ($val as $k => $v) {
+                        if ($k != 'name') {
                             $params['sku'][$key][$k] = isEmpty($v) ? '' : sprintf('%.2f', $v);
                         }
                     }
@@ -159,8 +164,8 @@ class Goods extends Backend {
 
         ];
 
-//        print_r($price);
-//        print_r($goods_insert);die;
+        //        print_r($price);
+        //        print_r($goods_insert);die;
 
         if ($this->dataLimit && $this->dataLimitFieldAutoFill) {
             $params[$this->dataLimitField] = $this->auth->id;
@@ -183,14 +188,14 @@ class Goods extends Backend {
             db::name('sku')->where(['goods_id' => $goods_id])->delete();
 
             $sku_insert = [];
-            if($params['is_sku'] == 0){ //单规格
+            if ($params['is_sku'] == 0) { //单规格
                 $sku_insert[] = [
                     'goods_id' => $goods_id,
                     'price' => json_encode($price),
                 ];
             }
-            if($params['is_sku'] == 1){ //多规格
-                foreach($price as &$val){
+            if ($params['is_sku'] == 1) { //多规格
+                foreach ($price as &$val) {
                     $name = $val['name'];
                     unset($val['name']);
                     $sku_insert[] = [
@@ -200,7 +205,7 @@ class Goods extends Backend {
                     ];
                 }
             }
-//            print_r($sku_insert);die;
+            //            print_r($sku_insert);die;
             $result = db::name('sku')->insertAll($sku_insert);
 
             Db::commit();
@@ -215,7 +220,8 @@ class Goods extends Backend {
     }
 
 
-    public function edit($ids = null) {
+    public function edit($ids = null)
+    {
         $row = db::name('goods')->where(['id' => $ids])->find();
         if (!$row) {
             $this->error(__('No Results were found'));
@@ -225,16 +231,15 @@ class Goods extends Backend {
             $this->error(__('You have no permission'));
         }
         if (false === $this->request->isPost()) {
-            if($row['is_sku'] == 0){
+            if ($row['is_sku'] == 0) {
                 $row['sku'] = json_encode([['name' => '']]);
                 $sku = db::name('sku')->where(['goods_id' => $row['id']])->find();
-//                echo '<pre>'; print_r($sku);die;
                 $row['price'] = array_merge(json_decode($sku['price'], true), ['id' => $sku['id']]);
             }
-            if($row['is_sku'] == 1){
+            if ($row['is_sku'] == 1) {
                 $sku = db::name('sku')->where(['goods_id' => $row['id']])->select();
                 $row['sku'] = [];
-                foreach($sku as $val){
+                foreach ($sku as $val) {
                     $price = json_decode($val['price'], true);
                     $price['name'] = $val['sku'];
                     $price['id'] = $val['id'];
@@ -264,18 +269,18 @@ class Goods extends Backend {
             foreach ($params as $key => $val) {
                 if (strstr($key, 'agency_price_')) $price[0][$key] = isEmpty($val) ? '' : sprintf('%.2f', $val);
             }
-//            $params['price'] = json_encode($price);
+            //            $params['price'] = json_encode($price);
         }
 
         if ($params['is_sku'] == 1) { //处理多规格
-            if(empty($params['sku'])) $this->error('请设置规格属性');
+            if (empty($params['sku'])) $this->error('请设置规格属性');
             $params['sku'] = json_decode($params['sku'], true);
             foreach ($params['sku'] as $key => $val) {
                 if (empty($val['name'])) {
                     unset($params['sku'][$key]);
                 } else {
-                    foreach($val as $k => $v){
-                        if($k != 'name' && $k != 'id'){
+                    foreach ($val as $k => $v) {
+                        if ($k != 'name' && $k != 'id') {
                             $params['sku'][$key][$k] = isEmpty($v) ? '' : sprintf('%.2f', $v);
                         }
                     }
@@ -284,9 +289,9 @@ class Goods extends Backend {
             if (empty($params['sku'])) $this->error('请设置规格属性');
             $price = $params['sku'];
         }
-//        print_r($price);die;
+        //        print_r($price);die;
 
-//        print_r($params);die;
+        //        print_r($params);die;
         $update = [
 
             // 111111111111111111111111111111111111111111111
@@ -321,14 +326,14 @@ class Goods extends Backend {
             'quota' => empty($params['quota']) ? null : $params['quota'], //每日限购
 
         ];
-//        print_r($update);die;
-//        $params = $this->preExcludeFields($params);
+        //        print_r($update);die;
+        //        $params = $this->preExcludeFields($params);
 
-        if($row['is_sku'] != $params['is_sku']){
-            if($row['stock'] > 0) $this->error("商品存在库存时无法切换规格类型");
+        if ($row['is_sku'] != $params['is_sku']) {
+            if ($row['stock'] > 0) $this->error("商品存在库存时无法切换规格类型");
         }
-        if($row['type'] != $params['type']){
-            if($row['stock'] > 0) $this->error("商品存在库存时无法切换商品类型");
+        if ($row['type'] != $params['type']) {
+            if ($row['stock'] > 0) $this->error("商品存在库存时无法切换商品类型");
         }
         $result = false;
         Db::startTrans();
@@ -340,8 +345,7 @@ class Goods extends Backend {
                 $row->validateFailException()->validate($validate);
             }
 
-            if($params['is_sku'] == 1){
-
+            if ($params['is_sku'] == 1) {
             }
 
             $sku = db::name('sku')->where(['goods_id' => $ids])->select();
@@ -350,26 +354,26 @@ class Goods extends Backend {
             $new_sku_id = array_column($price, 'id');
             $sku_diff = array_diff($old_sku_id, $new_sku_id);
 
-//            print_r($sku_diff);die;
+            //            print_r($sku_diff);die;
 
 
 
-            if($sku_diff){
+            if ($sku_diff) {
                 db::name('sku')->whereIn('id', $sku_diff)->delete();
             }
 
-//            print_r($sku_diff);die;
-//            print_r($price); die;
-//            print_r($sku);die;
+            //            print_r($sku_diff);die;
+            //            print_r($price); die;
+            //            print_r($sku);die;
 
-            foreach($price as &$val){
+            foreach ($price as &$val) {
                 $sku_name = null;
-                if(isset($val['name'])){
+                if (isset($val['name'])) {
                     $sku_name = $val['name'];
                     unset($val['name']);
                 }
-                if(empty($val['id'])){
-//                    echo 1;die;
+                if (empty($val['id'])) {
+                    //                    echo 1;die;
                     unset($val['id']);
                     $sku_insert = [
                         'goods_id' => $ids,
@@ -377,9 +381,9 @@ class Goods extends Backend {
                         'price' => json_encode($val),
                     ];
                     db::name('sku')->insert($sku_insert);
-                }else{
+                } else {
                     $s = db::name('sku')->where(['id' => $val['id']])->find();
-                    if($s){
+                    if ($s) {
                         $sku_id = $val['id'];
                         unset($val['id']);
                         $sku_update = [
@@ -387,14 +391,13 @@ class Goods extends Backend {
                             'price' => json_encode($val),
                         ];
                         db::name('sku')->where(['id' => $sku_id])->update($sku_update);
-                    }else{
+                    } else {
                         $sku_insert = [
                             'goods_id' => $ids,
                             'price' => json_encode($val),
                         ];
                         db::name('sku')->insert($sku_insert);
                     }
-
                 }
             }
 
@@ -411,7 +414,8 @@ class Goods extends Backend {
     }
 
 
-    public function index() {
+    public function index()
+    {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         if (false === $this->request->isAjax()) {
@@ -427,8 +431,8 @@ class Goods extends Backend {
             ->order($sort, $order)
             ->paginate($limit)->toArray();
         $rows = $list['data'];
-//        print_r($rows);die;
-        foreach($rows as &$val){
+        //        print_r($rows);die;
+        foreach ($rows as &$val) {
             $val['price'] = initPrice($val);
         }
 
@@ -444,6 +448,4 @@ class Goods extends Backend {
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-
-
 }

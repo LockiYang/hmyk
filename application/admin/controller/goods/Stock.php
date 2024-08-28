@@ -12,7 +12,8 @@ use think\exception\ValidateException;
  *
  * @icon fa fa-circle-o
  */
-class Stock extends Backend {
+class Stock extends Backend
+{
 
     /**
      * Stock模型对象
@@ -20,10 +21,11 @@ class Stock extends Backend {
      */
     protected $model = null;
 
-    public function _initialize() {
+    public function _initialize()
+    {
         parent::_initialize();
         $this->model = new \app\admin\model\goods\Stock;
-//        $this->view->assign("statusList", $this->model->getStatusList());
+        //        $this->view->assign("statusList", $this->model->getStatusList());
     }
 
 
@@ -57,7 +59,7 @@ class Stock extends Backend {
             }
             $result = $row->allowField(true)->save($params);
             Db::commit();
-        } catch (ValidateException|PDOException|Exception $e) {
+        } catch (ValidateException | PDOException | Exception $e) {
             Db::rollback();
             $this->error($e->getMessage());
         }
@@ -78,12 +80,12 @@ class Stock extends Backend {
         }
         $ids_arr = explode(',', $ids);
 
-        foreach($ids_arr as $ids){
+        foreach ($ids_arr as $ids) {
             $stock = db::name('stock')->where(['id' => $ids])->find();
-            if($stock){
+            if ($stock) {
                 db::name('stock')->where(['id' => $stock['id']])->delete();
-                if($stock['sale_time'] == null){
-                    if($stock['num'] > 0){
+                if ($stock['sale_time'] == null) {
+                    if ($stock['num'] > 0) {
                         db::name('sku')->where(['id' => $stock['sku_id']])->setDec('stock', $stock['num']);
                         db::name('goods')->where(['id' => $stock['goods_id']])->setDec('stock', $stock['num']);
                     }
@@ -93,11 +95,18 @@ class Stock extends Backend {
 
 
         $this->success('删除成功');
-
     }
 
 
-    public function alone_0() {
+    /**
+     * 库存：独立卡密单规格
+     * 
+     * alone 独立卡密
+     * fixed 固定卡密
+     * invented 虚拟卡密
+     */
+    public function alone_0()
+    {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         if (false === $this->request->isAjax()) {
@@ -113,54 +122,60 @@ class Stock extends Backend {
         $result = ['total' => $list->total(), 'rows' => $list->items()];
         return json($result);
     }
-    public function alone_1() {
-    //设置过滤方法
-    $this->request->filter(['strip_tags', 'trim']);
-    if (false === $this->request->isAjax()) {
+
+    /**
+     * 库存：独立卡密多规格
+     */
+    public function alone_1()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags', 'trim']);
+        if (false === $this->request->isAjax()) {
+            $goods_id = $this->request->param('ids');
+
+            $sku = db::name('sku')->where(['goods_id' => $goods_id])->select();
+            $this->assign([
+                'sku' => $sku
+            ]);
+            $this->assign('goods_id', $goods_id);
+            return $this->view->fetch();
+        }
         $goods_id = $this->request->param('ids');
 
-        $sku = db::name('sku')->where(['goods_id' => $goods_id])->select();
-        $this->assign([
-            'sku' => $sku
-        ]);
-        $this->assign('goods_id', $goods_id);
-        return $this->view->fetch();
+        [$where, $sort, $order, $offset, $limit] = $this->buildparams();
+
+        $model = new \app\admin\model\goods\Stock();
+
+        $list = $model->with(['sku'])->where(['goods_id' => $goods_id])->where($where)->order('id desc')->paginate($limit);
+        $result = ['total' => $list->total(), 'rows' => $list->items()];
+        return json($result);
     }
-    $goods_id = $this->request->param('ids');
 
-	[$where, $sort, $order, $offset, $limit] = $this->buildparams();
-
-    $model = new \app\admin\model\goods\Stock();
-
-    $list = $model->with(['sku'])->where(['goods_id' => $goods_id])->where($where)->order('id desc')->paginate($limit);
-    $result = ['total' => $list->total(), 'rows' => $list->items()];
-    return json($result);
-}
-
-    public function add(){
+    public function add()
+    {
         $goods_id = $this->request->param('ids');
         $goods = db::name('goods')->where(['id' => $goods_id])->find();
-//        $goods = $this->goodsDetail($goods);
+        //        $goods = $this->goodsDetail($goods);
         //        echo '<pre>'; print_r($goods);die;
-        if($this->request->isPost()){
+        if ($this->request->isPost()) {
             $params = $this->request->post();
             $timestamp = time();
 
             Db::startTrans();
             try {
-                if($goods['type'] == 'invented'){ //虚拟
-                    if($goods['is_sku'] == 0){
+                if ($goods['type'] == 'invented') { //虚拟
+                    if ($goods['is_sku'] == 0) {
                         $where = [
                             'goods_id' => $goods_id
                         ];
                         $e = db::name('stock')->where($where)->find();
                         $sku_id = db::name('sku')->where(['goods_id' => $goods_id])->value('id');
-                        if($e){
+                        if ($e) {
                             $update = [
                                 'num' => $params['num']
                             ];
                             $res = db::name('stock')->where(['id' => $e['id']])->update($update);
-                        }else{
+                        } else {
                             $insert = [
                                 'goods_id' => $goods_id,
                                 'num' => $params['num'],
@@ -172,10 +187,10 @@ class Stock extends Backend {
                         db::name('sku')->where(['id' => $sku_id])->update(['stock' => $params['num']]);
                         $res = true;
                     }
-                    if($goods['is_sku'] == 1){
+                    if ($goods['is_sku'] == 1) {
                         $stock = json_decode($params['row']['stock'], true);
                         $stockNum = 0;
-                        foreach($stock as $val){
+                        foreach ($stock as $val) {
                             $num = empty($val['stock']) || $val['stock'] < 0 ? 0 : $val['stock'];
                             $stockNum += $num;
                             $where = [
@@ -183,12 +198,12 @@ class Stock extends Backend {
                                 'sku_id' => $val['id']
                             ];
                             $res = db::name('stock')->where($where)->find();
-                            if($res){
+                            if ($res) {
                                 $update = [
                                     'num' => $num,
                                 ];
                                 db::name('stock')->where(['id' => $res['id']])->update($update);
-                            }else{
+                            } else {
                                 $insert = [
                                     'goods_id' => $goods_id,
                                     'sku_id' => $val['id'],
@@ -201,18 +216,17 @@ class Stock extends Backend {
                         db::name('goods')->where(['id' => $goods_id])->update(['stock' => $stockNum]);
                         $res = true;
                     }
-
                 }
-                if($goods['type'] == 'fixed'){ //固定卡密
-                    if($goods['is_sku'] == 0){
+                if ($goods['type'] == 'fixed') { //固定卡密
+                    if ($goods['is_sku'] == 0) {
                         $where = [
                             'goods_id' => $goods_id,
                         ];
                         $res = db::name('stock')->where($where)->find();
                         $sku_id = db::name('sku')->where(['goods_id' => $goods_id])->value('id');
-                        if($res){
+                        if ($res) {
                             db::name('stock')->where(['id' => $res['id']])->update($params);
-                        }else{
+                        } else {
                             $params['goods_id'] = $goods_id;
                             $params['sku_id'] = $sku_id;
                             $params['create_time'] = $timestamp;
@@ -222,11 +236,11 @@ class Stock extends Backend {
                         db::name('sku')->where(['id' => $sku_id])->update(['stock' => $params['num']]);
                         $res = true;
                     }
-                    if($goods['is_sku'] == 1){
+                    if ($goods['is_sku'] == 1) {
                         $stock = json_decode($params['row']['stock'], true);
-//                        print_r($stock);die;
+                        //                        print_r($stock);die;
                         $stockNum = 0;
-                        foreach($stock as $val){
+                        foreach ($stock as $val) {
                             $num = empty($val['num']) || $val['num'] < 0 ? 0 : $val['num'];
                             $stockNum += $num;
                             $where = [
@@ -234,13 +248,13 @@ class Stock extends Backend {
                                 'sku_id' => $val['id']
                             ];
                             $res = db::name('stock')->where($where)->find();
-                            if($res){
+                            if ($res) {
                                 $update = [
                                     'content' => $val['content'],
                                     'num' => $num,
                                 ];
                                 db::name('stock')->where(['id' => $res['id']])->update($update);
-                            }else{
+                            } else {
                                 $insert = [
                                     'goods_id' => $goods_id,
                                     'sku_id' => $val['id'],
@@ -256,15 +270,15 @@ class Stock extends Backend {
                         $res = true;
                     }
                 }
-                if($goods['type'] == 'alone'){ //独立卡密
-                    if($goods['is_sku'] == 0){
+                if ($goods['type'] == 'alone') { //独立卡密
+                    if ($goods['is_sku'] == 0) {
                         $params['stock'] = explode("\r\n", $params['stock']);
                         $params['stock'] = array_filter($params['stock']);
-                        if(empty($params['stock'])) throw new \Exception('库存数据还没填写呢');
+                        if (empty($params['stock'])) throw new \Exception('库存数据还没填写呢');
                         $insert = [];
                         $inc = 0;
                         $sku_id = db::name('sku')->where(['goods_id' => $goods_id])->value('id');
-                        foreach($params['stock'] as $val){
+                        foreach ($params['stock'] as $val) {
                             $insert[] = [
                                 'goods_id' => $goods_id,
                                 'content' => $val,
@@ -277,17 +291,17 @@ class Stock extends Backend {
                         db::name('sku')->where(['id' => $sku_id])->setInc('stock', $inc);
                         $res = db::name('goods')->where(['id' => $goods_id])->setInc('stock', $inc);
                     }
-                    if($goods['is_sku'] == 1){
+                    if ($goods['is_sku'] == 1) {
                         $params['sku'] = array_filter($params['sku']);
-                        if(empty($params['sku'])) throw new \Exception('您还没有选择要添加库存的规格呢');
+                        if (empty($params['sku'])) throw new \Exception('您还没有选择要添加库存的规格呢');
                         $params['stock'] = explode("\r\n", $params['stock']);
                         $params['stock'] = array_filter($params['stock']);
-                        if(empty($params['stock'])) throw new \Exception('库存数据还没填写呢');
+                        if (empty($params['stock'])) throw new \Exception('库存数据还没填写呢');
 
-                        foreach($params['sku'] as $val){
+                        foreach ($params['sku'] as $val) {
                             $inc = 0;
                             $insert = [];
-                            foreach($params['stock'] as $v){
+                            foreach ($params['stock'] as $v) {
                                 $insert[] = [
                                     'goods_id' => $goods_id,
                                     'sku_id' => $val,
@@ -305,43 +319,43 @@ class Stock extends Backend {
 
 
                 db::commit();
-            }catch (\Exception $e){
+            } catch (\Exception $e) {
                 db::rollback();
                 $this->error($e->getMessage());
             }
-            if($res){
+            if ($res) {
                 $this->success('操作成功');
-            }else{
+            } else {
                 $this->error('操作失败');
             }
         }
 
-        if($goods['is_sku'] == 1){
+        if ($goods['is_sku'] == 1) {
             $sku = db::name('sku')->where(['goods_id' => $goods['id']])->select();
             $this->assign('sku', $sku);
         }
 
-        if($goods['type'] == 'fixed'){
-            if($goods['is_sku'] == 0){
+        if ($goods['type'] == 'fixed') {
+            if ($goods['is_sku'] == 0) {
                 $where = [
                     'goods_id' => $goods_id,
                 ];
                 $stock = db::name('stock')->where($where)->find();
                 $this->assign('stock', $stock);
             }
-            if($goods['is_sku'] == 1){
+            if ($goods['is_sku'] == 1) {
                 $stock = db::name('stock')->where(['goods_id' => $goods['id']])->select();
                 $sku = db::name('sku')->where(['goods_id' => $goods_id])->select();
                 $data = [];
-                foreach($sku as $key => $val){
+                foreach ($sku as $key => $val) {
                     $data[$key] = [
                         'sku' => $val['sku'],
                         'num' => '',
                         'content' => '',
                         'id' => $val['id']
                     ];
-                    foreach($stock as $v){
-                        if($v['sku_id'] == $val['id']){
+                    foreach ($stock as $v) {
+                        if ($v['sku_id'] == $val['id']) {
                             $data[$key]['num'] = $v['num'];
                             $data[$key]['content'] = $v['content'];
                         }
@@ -349,28 +363,27 @@ class Stock extends Backend {
                 }
                 $this->assign('data', json_encode($data));
             }
-
         }
-        if($goods['type'] == 'invented'){
-            if($goods['is_sku'] == 0){
+        if ($goods['type'] == 'invented') {
+            if ($goods['is_sku'] == 0) {
                 $where = [
                     'goods_id' => $goods_id,
                 ];
                 $stock = db::name('stock')->where($where)->find();
                 $this->assign('stock', $stock);
             }
-            if($goods['is_sku'] == 1){
+            if ($goods['is_sku'] == 1) {
                 $stock = db::name('stock')->where(['goods_id' => $goods['id']])->select();
                 $sku = db::name('sku')->where(['goods_id' => $goods_id])->select();
                 $data = [];
-                foreach($sku as $key => $val){
+                foreach ($sku as $key => $val) {
                     $data[$key] = [
                         'sku' => $val['sku'],
                         'stock' => '',
                         'id' => $val['id']
                     ];
-                    foreach($stock as $v){
-                        if($v['sku_id'] == $val['id']){
+                    foreach ($stock as $v) {
+                        if ($v['sku_id'] == $val['id']) {
                             $data[$key]['stock'] = $v['num'];
                         }
                     }
@@ -393,6 +406,4 @@ class Stock extends Backend {
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-
-
 }

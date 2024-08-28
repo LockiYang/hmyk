@@ -80,7 +80,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                     text: __('同步库存'),
                                     classname: 'btn btn-xs btn-info btn-click',
                                     icon: 'fa fa-exchange',
-                                    // dropdown: '更多',//如果包含dropdown，将会以下拉列表的形式展示
                                     click: function (data, row) {
                                         layer.load();
                                         $.get("goods/update_stock", row, function(e){
@@ -202,8 +201,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                         }
                                     }
                                 },
-
-                                { //多规格
+                                {
                                     name: 'edit',
                                     title: __('编辑商品'),
                                     classname: 'btn btn-xs btn-success btn-addtabs',
