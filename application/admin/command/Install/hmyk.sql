@@ -322,6 +322,8 @@ INSERT INTO `hm_auth_rule` VALUES (135, 'file', 90, 'blog/blog/index', '查看',
 INSERT INTO `hm_auth_rule` VALUES (136, 'file', 90, 'blog/blog/add', '添加', 'fa fa-circle-o', '', '', '', 0, 'addtabs', '', 'tj', 'tianjia', 1724773851, 1724773851, 0, 'normal');
 INSERT INTO `hm_auth_rule` VALUES (137, 'file', 90, 'blog/blog/del', '删除', 'fa fa-circle-o', '', '', '', 0, 'addtabs', '', 'sc', 'shanchu', 1724773864, 1724773864, 0, 'normal');
 INSERT INTO `hm_auth_rule` VALUES (138, 'file', 90, 'blog/blog/edit', '编辑', 'fa fa-circle-o', '', '', '', 0, 'addtabs', '', 'bj', 'bianji', 1724773876, 1724773876, 0, 'normal');
+INSERT INTO `hm_auth_rule` VALUES (139, 'file', 88, 'goods/stock/alone_0', '库存-独立卡密单规格', 'fa fa-circle-o', '', '', '', 0, 'addtabs', '', 'kcdlkmdgg', 'kucundulikamidanguige', 1724819535, 1724819535, 0, 'normal');
+INSERT INTO `hm_auth_rule` VALUES (140, 'file', 88, 'goods/stock/alone_1', '库存-独立卡密多规格', 'fa fa-circle-o', '', '', '', 0, 'addtabs', '', 'kcdlkmdgg', 'kucundulikamiduoguige', 1724819575, 1724819575, 0, 'normal');
 
 -- ----------------------------
 -- Table structure for hm_bill
