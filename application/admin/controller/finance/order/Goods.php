@@ -12,7 +12,8 @@ use think\exception\ValidateException;
  *
  * @icon fa fa-circle-o
  */
-class Goods extends Backend {
+class Goods extends Backend
+{
 
     protected $relationSearch = true;
     protected $searchFields = ['out_trade_no', 'goods_name', 'user.username', 'email', 'mobile', 'password'];
@@ -23,45 +24,46 @@ class Goods extends Backend {
      */
     protected $model = null;
 
-    public function _initialize() {
+    public function _initialize()
+    {
         parent::_initialize();
         $this->model = new \app\admin\model\finance\order\Goods;
 
         $options = [];
         $optionsResult = db::name('options')->select();
-        foreach($optionsResult as $val){
+        foreach ($optionsResult as $val) {
             $options[$val['name']] = $val['value'];
         }
 
         $active_plugins = $options['active_plugin'];
         $active_plugins = empty($active_plugins) ? [] : unserialize($active_plugins);
         if ($active_plugins && is_array($active_plugins)) {
-            foreach($active_plugins as $plugin) {
+            foreach ($active_plugins as $plugin) {
                 $info = include_once(ROOT_PATH . 'content/' . $plugin . '/info.php');
-                if($info['type'] == 'basic'){
+                if ($info['type'] == 'basic') {
                     include_once(ROOT_PATH . 'content/' . $plugin . '/' . $plugin . '.php');
                 }
             }
         }
-
     }
 
 
-    public function supplement(){
+    public function supplement()
+    {
         $order = db::name('goods_order')->where(['id' => $this->request->param('ids')])->find();
         $goods = db::name('goods')->where(['id' => $order['goods_id']])->find();
         db::startTrans();
         try {
             $result = $this->notifyGoodsSuccess($goods, $order['out_trade_no']);
             db::commit();
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             db::rollback();
             $this->error($e->getMessage() . '---' . $e->getLine());
             $this->error($e->getMessage());
         }
-        if($result){
+        if ($result) {
             $this->success('补单成功');
-        }else{
+        } else {
             $this->error('补单失败');
         }
     }
@@ -74,7 +76,8 @@ class Goods extends Backend {
      * 4，更新订单状态
      * 5，返佣给上级
      */
-    protected function notifyGoodsSuccess($goods, $out_trade_no) {
+    protected function notifyGoodsSuccess($goods, $out_trade_no)
+    {
         $order = db::name('goods_order')->where(['out_trade_no' => $out_trade_no])->find();
         db::name('goods_order')->where(['id' => $order['id']])->update(['pay_time' => $this->timestamp]);
         if ($goods['type'] == 'alone') { //更新库存表并写入发货表
@@ -196,7 +199,8 @@ class Goods extends Backend {
     }
 
 
-    public function index() {
+    public function index()
+    {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         if (false === $this->request->isAjax()) {
@@ -212,7 +216,8 @@ class Goods extends Backend {
         return json($result);
     }
 
-    public function detail($ids = null) {
+    public function detail($ids = null)
+    {
         $row = $this->model->get($ids);
         if (!$row) {
             $this->error(__('No Results were found'));
@@ -222,7 +227,7 @@ class Goods extends Backend {
             $this->error(__('You have no permission'));
         }
         if (false === $this->request->isPost()) {
-            
+
             $row['attach'] = json_decode($row['attach'], true);
 
             $deliver = db::name('deliver')->where(['order_id' => $ids])->select();
@@ -230,9 +235,9 @@ class Goods extends Backend {
             $this->assign([
                 'deliver' => $deliver
             ]);
-            
+
             $this->view->assign('row', $row);
-            
+
             return $this->view->fetch();
         }
         $params = $this->request->post('row/a');
@@ -261,7 +266,8 @@ class Goods extends Backend {
         $this->success();
     }
 
-    public function deliver($ids = null) {
+    public function deliver($ids = null)
+    {
         $row = $this->model->get($ids);
         if (!$row) {
             $this->error(__('No Results were found'));
@@ -291,10 +297,10 @@ class Goods extends Backend {
             }
             $fd = db::name('deliver')->where(['order_id' => $ids])->find();
             $deliver = [];
-            if($fd){
+            if ($fd) {
                 $result = db::name('deliver')->where(['id' => $fd['id']])->update(['content' => $params['content']]);
                 $deliver[] = ['content' => $params['content']];
-            }else{
+            } else {
                 $insert = [
                     'order_id' => $ids,
                     'content' => $params['content'],
@@ -302,11 +308,9 @@ class Goods extends Backend {
                 ];
                 $result = db::name('deliver')->insert($insert);
                 $deliver[] = $insert;
-
             }
             doAction('send_goods', $row, $deliver);
             Db::commit();
-
         } catch (ValidateException | PDOException | Exception $e) {
             Db::rollback();
             $this->error($e->getMessage());
@@ -323,6 +327,4 @@ class Goods extends Backend {
      * 因此在当前控制器中可不用编写增删改查的代码,除非需要自己控制这部分逻辑
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
-
-
 }
