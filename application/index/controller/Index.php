@@ -5,7 +5,6 @@ namespace app\index\controller;
 use app\common\controller\IndexCommon;
 use hehe\Verify;
 use think\Db;
-use think\Log;
 
 
 class Index extends IndexCommon

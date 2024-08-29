@@ -31,7 +31,7 @@ Route::rule('/branch', "user/branch/index"); //邀请进入
 
 
 Route::rule('/scan', "index/scan/index"); //扫码页面
-Route::rule('/submit', "index/submit/index");
+Route::rule('/submit', "index/submit/index"); //提交订单
 
 Route::rule('/register', "user/user/register"); //注册页
 Route::rule('/logout', "user/user/logout"); //退出登录

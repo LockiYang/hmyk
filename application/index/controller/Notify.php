@@ -5,16 +5,22 @@ namespace app\index\controller;
 use app\common\controller\Frontend;
 
 use think\Db;
+use think\Log;
 
 
+/**
+ * 支付回调接口
+ * hm_type: goods, recharge
+ */
 class Notify extends Frontend
 {
 
     protected $noNeedRight = ['*'];
     protected $noNeedLogin = ['*'];
 
-
-
+    /**
+     * 同步通知接口
+     */
     public function ret()
     {
         $params = $this->request->param();
@@ -69,13 +75,14 @@ class Notify extends Frontend
     }
 
 
-
-
-
-
+    /**
+     * 异步通知接口
+     */
     public function index()
     {
 
+        Log::info("async notify: " . json_encode($this->request->param()));
+        
         $params = $this->request->param();
 
         unset($params['hm_type']);
@@ -83,7 +90,6 @@ class Notify extends Frontend
 
         $plugin = $this->request->param('plugin');
         $hm_type = $this->request->param('hm_type');
-
 
 
         include_once ROOT_PATH . "content/{$plugin}/{$plugin}.php";
@@ -104,8 +110,8 @@ class Notify extends Frontend
                 echo $eo;
                 die;
             }
-            try {
 
+            try {
                 if ($hm_type == 'recharge') { //充值回调
                     db::name('recharge_order')->where(['id' => $order['id']])->update(['pay_time' => $this->timestamp, 'trade_no' => $result['trade_no']]);
                     $user = db::name('user')->where(['id' => $order['user_id']])->find();
@@ -135,7 +141,6 @@ class Notify extends Frontend
                     die;
                 }
             } catch (\Exception $e) {
-
                 $insert = [
                     'name' => '代码错误',
                     'content' => $e->getMessage() . '---' . $e->getLine(),
@@ -144,7 +149,6 @@ class Notify extends Frontend
                 db::name('test')->insert($insert);
             }
         } else {
-
             $insert = [
                 'name' => '验签失败',
                 'content' => '验签失败',

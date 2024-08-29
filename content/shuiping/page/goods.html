@@ -448,7 +448,6 @@
             data.attach.push({title: $(this).data('title'), value: $(this).val()});
         });
         layer.load();
-        // console.log(data)
         $.post("/pay/goods", data, function(e){
             layer.closeAll();
             if(e.code == 200){

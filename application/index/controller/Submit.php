@@ -4,9 +4,11 @@ namespace app\index\controller;
 
 use app\common\controller\IndexCommon;
 
+/**
+ * 在前端通过表单提交支付订单
+ */
 class Submit extends IndexCommon
 {
-
 
     protected $noNeedRight = ['*'];
     protected $noNeedLogin = ['*'];

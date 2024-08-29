@@ -332,14 +332,12 @@ function hmCurl($url, $params = false, $ispost = 0, $header = false, $timeout = 
     }
     $response = curl_exec($ch);
     if ($response === false) {
-        //        echo "cURL Error: " . curl_error($ch);
         return false;
     }
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     $httpInfo = array_merge($httpInfo, curl_getinfo($ch));
 
     curl_close($ch);
-    // print_r($httpInfo);
     return $response;
 }
 
