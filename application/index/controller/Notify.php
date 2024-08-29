@@ -82,7 +82,7 @@ class Notify extends Frontend
     {
 
         Log::info("async notify: " . json_encode($this->request->param()));
-        
+
         $params = $this->request->param();
 
         unset($params['hm_type']);
@@ -96,7 +96,7 @@ class Notify extends Frontend
 
         $result = checkSign($params);
 
-        if ($plugin == 'vmqpay') {
+        if ($plugin == 'vmqpay' || $plugin == 'goodpay') {
             $eo = 'success';
         } else {
             $eo = 'ok';

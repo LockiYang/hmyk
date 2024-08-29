@@ -31,12 +31,12 @@ function pay($param, $info = null)
 
     $data['sign'] = getSign($data, $info['md5_key']);
     $gateway_url = rtrim($info['gateway_url'], '/') . '/proxy/pay/unifiedorder';
-    $data['gateway_url'] = $gateway_url;
+    // $data['gateway_url'] = $gateway_url;
 
     $pay_data = json_decode(post($gateway_url, $data), true);
 
-    // 判断$pay_data code 是否为0 成功
-    if ($pay_data['code'] != 0) {
+    // 判断$pay_data code 是否为0 和 data 是否存在
+    if (!isset($pay_data['data'])) {
         return [
             'code' => 400,
             'msg' => '支付请求失败，请重试',
@@ -44,7 +44,7 @@ function pay($param, $info = null)
     }
 
     $result = [
-        'qr_code' => 'abc',
+        'qr_code' => $pay_data['data'],
         'out_trade_no' => $param['out_trade_no'],
         'hm_type' => $param['hm_type'],
         'pay_type' => $pay_type,
@@ -76,7 +76,6 @@ function checkSign($params = null)
     }
     return false;
 }
-
 
 /**
  * 生成签名结果
@@ -120,14 +119,18 @@ function post($url, $data)
 }
 
 // $data = array(
-//     'pid' => 'abc',
-//     'type' => 'alipay',
-//     'out_trade_no' => 'abc',
-//     'notify_url' => 'abc',
-//     'name' => 'VIP订阅',
-//     'money' => 'abc',
-//     'clientip' => '127.0.0.1',
-//     'sign_type' => 'MD5'
+//     'appId' => 'abc',
+//     'version' => '1.0',
+//     'nonceStr' => substr(md5(time()), 5, 10),
+//     'orderId' => 'abc',
+//     'amount' => 100,
+//     'goodsName' => 'abc',
+//     'goodsDesc' => 'abc',
+//     'clientIp' => '127.0.0.1',
+//     'asyncNotifyUrl' => 'abc',
+//     'payChannel' => 'ALP',
+//     'tradeType' => 'H5'
 // );
 
-// echo getSign($data, 'abc');
+// print_r(getSign($data, 'abc'));
+// print_r(sign($data, 'abc'));
