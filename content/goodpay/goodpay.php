@@ -35,6 +35,14 @@ function pay($param, $info = null)
 
     $pay_data = json_decode(post($gateway_url, $data), true);
 
+    // 判断$pay_data code 是否为0 成功
+    if ($pay_data['code'] != 0) {
+        return [
+            'code' => 400,
+            'msg' => '支付请求失败，请重试',
+        ];
+    }
+
     $result = [
         'qr_code' => 'abc',
         'out_trade_no' => $param['out_trade_no'],
@@ -42,7 +50,7 @@ function pay($param, $info = null)
         'pay_type' => $pay_type,
         'pay_data' => $pay_data
     ];
-    
+
     return [
         'code' => 200,
         'data' => base64_encode(json_encode($result)),
@@ -81,12 +89,12 @@ function getSign($data, $secret_key)
             unset($data[$key]);
         }
     }
+
     ksort($data);
     reset($data);
 
-
     $prestr  = urldecode(http_build_query($data));
-    $sign = strtoupper(md5($prestr . $secret_key));
+    $sign = strtoupper(md5($prestr . "&key=" .  $secret_key));
     return $sign;
 }
 
