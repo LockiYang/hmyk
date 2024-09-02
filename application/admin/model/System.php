@@ -7,14 +7,9 @@ use think\Model;
 
 class System extends Model
 {
-
-    
-
-    
-
     // 表名
     protected $name = 'test';
-    
+
     // 自动写入时间戳字段
     protected $autoWriteTimestamp = false;
 
@@ -24,17 +19,5 @@ class System extends Model
     protected $deleteTime = false;
 
     // 追加属性
-    protected $append = [
-
-    ];
-    
-
-    
-
-
-
-
-
-
-
+    protected $append = [];
 }

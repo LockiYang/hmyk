@@ -198,7 +198,7 @@ class Install extends Command
             // 调用原生PDO对象进行批量查询
             $instance->getPdo()->exec($sql);
         } catch (\PDOException $e) {
-            if(strstr($e->getMessage(), '(using password: YES)')){
+            if (strstr($e->getMessage(), '(using password: YES)')) {
                 throw new Exception('数据库连接失败！好像是MySQL数据库的用户名或者密码填写错误了');
             }
             throw new Exception($e->getMessage());

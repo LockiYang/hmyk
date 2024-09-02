@@ -11,7 +11,8 @@ use think\Db;
  *
  * @icon fa fa-user
  */
-class User extends Backend {
+class User extends Backend
+{
 
     protected $relationSearch = true;
     protected $searchFields = 'id,username,nickname';
@@ -21,13 +22,15 @@ class User extends Backend {
      */
     protected $model = null;
 
-    public function _initialize() {
+    public function _initialize()
+    {
         parent::_initialize();
         $this->model = model('User');
     }
 
 
-    public function money($ids = null) {
+    public function money($ids = null)
+    {
 
         if ($this->request->isPost()) {
             $params = $this->request->post("row/a");
@@ -64,7 +67,8 @@ class User extends Backend {
     /**
      * 查看
      */
-    public function index() {
+    public function index()
+    {
         //设置过滤方法
         $this->request->filter(['strip_tags', 'trim']);
         if ($this->request->isAjax()) {
@@ -88,7 +92,8 @@ class User extends Backend {
     /**
      * 添加
      */
-    public function add() {
+    public function add()
+    {
         if ($this->request->isPost()) {
             $this->token();
         }
@@ -98,7 +103,8 @@ class User extends Backend {
     /**
      * 编辑
      */
-    public function edit($ids = null) {
+    public function edit($ids = null)
+    {
         if ($this->request->isPost()) {
             $this->token();
         }
@@ -107,17 +113,18 @@ class User extends Backend {
         if (!$row) {
             $this->error(__('No Results were found'));
         }
-//        $this->view->assign('groupList', build_select('row[group_id]', \app\admin\model\UserGroup::column('id,name'), $row['group_id'], ['class' => 'form-control selectpicker']));
-		$this->assign([
-			'agency' => Db::name('user_agency')->order(['weigh' => 'desc'])->select()
-		]);
+        //        $this->view->assign('groupList', build_select('row[group_id]', \app\admin\model\UserGroup::column('id,name'), $row['group_id'], ['class' => 'form-control selectpicker']));
+        $this->assign([
+            'agency' => Db::name('user_agency')->order(['weigh' => 'desc'])->select()
+        ]);
         return parent::edit($ids);
     }
 
     /**
      * 删除
      */
-    public function del($ids = "") {
+    public function del($ids = "")
+    {
         if (!$this->request->isPost()) {
             $this->error(__("Invalid parameters"));
         }
@@ -130,5 +137,4 @@ class User extends Backend {
         Auth::instance()->delete($row['id']);
         $this->success();
     }
-
 }

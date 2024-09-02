@@ -49,7 +49,7 @@ class User extends Model
         self::beforeUpdate(function ($row) {
             $changedata = $row->getChangedData();
             $origin = $row->getOriginData();
-            if (isset($changedata['money']) && (function_exists('bccomp') ? bccomp($changedata['money'], $origin['money'], 2) !== 0 : (double)$changedata['money'] !== (double)$origin['money'])) {
+            if (isset($changedata['money']) && (function_exists('bccomp') ? bccomp($changedata['money'], $origin['money'], 2) !== 0 : (float)$changedata['money'] !== (float)$origin['money'])) {
                 MoneyLog::create(['user_id' => $row['id'], 'money' => $changedata['money'] - $origin['money'], 'before' => $origin['money'], 'after' => $changedata['money'], 'memo' => '管理员变更金额']);
             }
             if (isset($changedata['score']) && (int)$changedata['score'] !== (int)$origin['score']) {
@@ -112,8 +112,8 @@ class User extends Model
         return $this->belongsTo('UserGroup', 'group_id', 'id', [], 'LEFT')->setEagerlyType(0);
     }
 
-	public function agency(){
-		return $this->hasOne('app\admin\model\user\Agency', 'id', 'agency_id');
-	}
-
+    public function agency()
+    {
+        return $this->hasOne('app\admin\model\user\Agency', 'id', 'agency_id');
+    }
 }
