@@ -226,12 +226,15 @@
 <div class="page-container home " style="margin-top: 1px;">
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-9">
+            <!-- 公告 -->
             {if condition="!empty($template_config.gg_status)"}
             <div style="background: #fff; padding: 15px; padding-bottom: 5px; margin-bottom: 20px;" class="shadow pc-hidden">
                 {$template_config.gonggao}
             </div>
             {/if}
-            <div id="md"></div>
+
+            <!-- 商品分类 -->
+            <!-- <div id="md"></div>
             <div style="margin-top: 0px; margin-bottom: 18px;" class="swiper mySwiper">
                 <div class="swiper-wrapper">
                     {php}$active = -1; {/php}
@@ -245,6 +248,13 @@
                     {/volist}
                 </div>
                 <div class="swiper-scrollbar"></div>
+            </div> -->
+            <div style="margin-top: 20px;">
+                {volist name="category" id="vo"}
+                {if condition="$vo.pid == 0"}
+                <a href="{:url('/goodscate/' . $vo.id)}#md" class="category-btn {if condition='!empty($vo.active)'}active{/if}">{$vo.name}</a>
+                {/if}
+                {/volist}
             </div>
 
             <?php $n = 0; ?>
@@ -358,7 +368,7 @@
 {/block}
 
 {block name="footjs"}
-<script>
+<!-- <script>
     var pcSwiper = new Swiper(".mySwiper", {
         slidesPerView: "auto",
         spaceBetween: 0,
@@ -373,6 +383,6 @@
         },
     });
     pcSwiper.slideTo("{$active}", 1000, false)
-</script>
+</script> -->
 {:doAction('indexFoot')}
 {/block}
